@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class AdminModel extends Model
+class AdminModel extends BaseModel
 {
     protected $table = 'admin';
 

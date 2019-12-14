@@ -21,6 +21,7 @@ class CreateUserTable extends Migration
             $table->string('email',255)->default('')->comment('邮箱');
             $table->string('head_pic',255)->default('/user_head/default_user_head.png')->comment('邮箱');
             $table->tinyInteger('status')->default(1)->comment('状态，1：正常，2：禁用');
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
