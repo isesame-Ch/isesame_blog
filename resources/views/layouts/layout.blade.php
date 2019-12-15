@@ -192,9 +192,6 @@
             }
         }
         @media screen and (min-width: 768px) and (max-width: 992px) {
-            #nav-div {
-                padding-right: 10%;
-            }
             #nav_head_pic {
                 display: inline-block;
                 height: 50px;
@@ -609,13 +606,15 @@
             dataType:'json',
             success:function (data) {
                 if (data.code == 0) {
-                    $list = data.content.list;
-                    $list.forEach(function ($item) {
-                        $item.created_time = tsToDate('Y-m-d',$item.created_time);
-                        $("#support_list").append(
-                            " <li class=\"recommend_li\"><a href=\"/article/article_id/"+$item.id+"\"><p class=\"article_title\">"+$item.article_name+"</p><span>"+$item.created_time+"</span></a></li>"
-                        )
-                    })
+                    if (data.content.length > 0) {
+                        $list = data.content;
+                        $list.forEach(function ($item) {
+                            $item.created_time = tsToDate('Y-m-d',$item.created_time);
+                            $("#support_list").append(
+                                " <li class=\"recommend_li\"><a href=\"/article/article_id/"+$item.id+"\"><p class=\"article_title\">"+$item.article_name+"</p><span>"+$item.created_at+"</span></a></li>"
+                            )
+                        })
+                    }
                 } else {
                     alert('出错喽~！' + data.message);
                 }

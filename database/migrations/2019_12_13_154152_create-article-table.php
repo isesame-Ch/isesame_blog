@@ -22,7 +22,7 @@ class CreateArticleTable extends Migration
             $table->string('keywords_one',20)->default('')->comment('文章关键字1');
             $table->string('keywords_two',20)->default('')->comment('文章关键字2');
             $table->string('keywords_three',20)->default('')->comment('文章关键字3');
-            $table->text('article_contentid')->comment('文章内容');
+            $table->text('article_content')->comment('文章内容');
             $table->string('article_img',120)->default('/article_img/article_default_img.png')->comment('文章首图');
             $table->integer('article_view')->unsigned()->comment('查看人数');
             $table->tinyInteger('article_type')->default(1)->comment('文章的模式:1为公开，2为私有');

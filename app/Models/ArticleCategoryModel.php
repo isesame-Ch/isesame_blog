@@ -19,4 +19,12 @@ class ArticleCategoryModel extends BaseModel
      * @var array
      */
     #protected $fillable = [''];
+    
+    /**
+     * 
+     */
+    public function article()
+    {
+        return $this->hasMany(ArticleModel::class);
+    }
 }

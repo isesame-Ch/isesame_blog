@@ -204,7 +204,6 @@
                                     cookie_expires.setTime(cookie_expires.getTime()+3*3600*1000);
                                     // $.cookie('cache_key',data.content.cacheKey,{ expires: cookie_expires });
                                     // $.cookie('access_token',data.content.token,{ expires: cookie_expires });
-                                    console.log(data);
                                     $.cookie('user',JSON.stringify(data.content.user),{ expires: cookie_expires });
                                     window.location = ''+data.content.url+'';
                                 },3000);

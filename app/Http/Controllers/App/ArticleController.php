@@ -34,7 +34,7 @@ class ArticleController extends Controller
 
     public function __construct(ArticleService $articleService) {
         $this->middleware('user.auth', [
-            'only' => ['show', 'create', 'store']
+            'only' => ['create', 'store']
         ]);
 
         $this->articleService = $articleService;
@@ -58,11 +58,17 @@ class ArticleController extends Controller
             throw new \Exception('请先登录',ErrorCode::USER_HAS_NOT_LOGIN);
         }
 
-        $articles = $this->obj2Array(ArticleModel::getList());
+        $articles = $this->obj2Array(
+            ArticleModel::getList(
+                [],
+                $request->input('page_size',10),
+                ['article.id','article.article_name','article.article_author','article.article_describe','article.article_img','article.created_at','article.updated_at']
+            )
+        );
 
-        foreach ($articles as &$item) {
-            $item->created_at = date('Y-m-d H:i:s', $item->created_at);
-            $item->updated_at = date('Y-m-d H:i:s', $item->updated_at);
+        foreach ($articles['data'] as &$item) {
+            $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
+            $item['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
         }
 
         $this->setKeyContent($articles);
@@ -72,23 +78,33 @@ class ArticleController extends Controller
     /**
      * @param Request $request
      * @return ArticleController
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Exception
      */
     public function detail(Request $request)
     {
         $rules = [
             'article_id' => 'required|integer'
         ];
+        $data = $this->filterParams($request,$rules);
 
-        $this->setKeyContent($this->articleService->detail(
-            $this->filterParams($request,$rules)
-        ));
+        if (!Auth::check()) {
+            throw new \Exception('请先登录',ErrorCode::USER_HAS_NOT_LOGIN);
+        }
+        $article = ArticleModel::query()
+            ->leftJoin('article_category', 'article_category.id','=','article.category_id')
+            ->where('article.id',$data['article_id'])
+            ->first();
+
+        $article->created_at = date('Y-m-d H:i:s', $article->created_at);
+
+        $this->setKeyContent($article);
         return $this->responseArray();
     }
 
     /**
      * @param Request $request
-     * @return mixed
+     * @return ArticleController
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function getSupportList(Request $request)
     {
@@ -98,11 +114,24 @@ class ArticleController extends Controller
             'article_author' => 'string|nullable|max:20',
             'article_support' => 'in:2'
         ];
+        $data = $this->filterParams($request,$rules);
+        $articles = ArticleModel::getList(
+            [
+                ['article_support',2]
+            ],
+            false,
+            ['article.id','article.article_name','article.created_at'],
+            false,
+            ['limit'=>10],
+            ['offset' => 0]
 
-        $this->setKeyContent($this->articleService->getList(
-            $this->filterParams($request,$rules),
-            $request->input('page_size',10)
-        ));
+        );
+
+        foreach ($articles as &$item) {
+            $item->created_at = date('Y-m-d', $item->created_at);
+        }
+
+        $this->setKeyContent($articles);
         return $this->responseArray();
     }
 

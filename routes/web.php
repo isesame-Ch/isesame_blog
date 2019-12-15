@@ -34,9 +34,8 @@ Route::group(['namespace' => 'App'], function () {
     Route::get('/article/getlist', 'ArticleController@getList');
     //前端--文章--推荐列表
     Route::get('/article/support/list', 'ArticleController@getSupportList');
-
     //前端--文章页
-    Route::get('/article/article_id/{id}', 'ArticleController@show');
+    Route::get('/article/article_id/{id}', 'ArticleController@store');
     //前端--文章--详情
     Route::get('/article/detail', 'ArticleController@detail');
 

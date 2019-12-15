@@ -109,10 +109,22 @@
                         $('#article_title').html(data.content.article_name);
                         $('#article_content').html(data.content.article_content);
                         $('#article_author').html(data.content.article_author);
-                        $('#article_time').text(data.content.created_time);
-                        $('#keywords1').text(data.content.keywords1);
-                        $('#keywords2').text(data.content.keywords2);
-                        $('#keywords3').text(data.content.keywords3);
+                        $('#article_time').text(data.content.created_at);
+                        if (data.content.keywords_one) {
+                            $('#keywords1').text(data.content.keywords_one);
+                        } else {
+                            $('#keywords1').remove();
+                        }
+                        if (data.content.keywords_two) {
+                            $('#keywords2').text(data.content.keywords_two);
+                        } else {
+                            $('#keywords2').remove();
+                        }
+                        if (data.content.keywords_three) {
+                            $('#keywords3').text(data.content.keywords_three);
+                        } else {
+                            $('#keywords3').remove();
+                        }
                     },
                     error:function (e) {
                         console.log('555~出错喽~！')

@@ -214,13 +214,13 @@
                                 "<li><a href=\"javascript:void(0)\" class='pagination_a'>&raquo;</a></li>"
                             );
                             $lis = $("#article_list ul.pagination li");
-                            if (data.content.length > 0) {
+                            if (data.code == 0) {
                                 $lis[data.content.current_page].className = 'active';
 
                                 //加载文章列表
-                                $list = data.content.list;
+                                $list = data.content.data;
                                 $list.forEach(function ($item) {
-                                    $item.created_time = tsToDate('Y/m/d H:i:s',''+$item.created_time+'');
+                                    // $item.created_at = tsToDate('Y/m/d H:i:s',''+$item.created_at+'');
                                     $("#article_list #article_ul").append(
                                         "<li class=\"article_li\">\n" +
                                         "<a href=\"/article/article_id/"+$item.id+"\" class=\"article_img col-lg-3\">\n" +
@@ -235,7 +235,7 @@
                                         // "<img src=\"https://api.vtrois.com/image/25x25\" alt=\"\" class=\"author_img\" style=\"border-radius: 50px\">\n" +
                                         // "</a>\n" +
                                         "<span class=\"author\">"+$item.article_author+"</span>\n" +
-                                        "<span>"+$item.created_time+"</span>\n" +
+                                        "<span>"+$item.created_at+"</span>\n" +
                                         "<p class=\"article_content\">\n" +
                                         $item.article_describe +
                                         "</p>\n" +
