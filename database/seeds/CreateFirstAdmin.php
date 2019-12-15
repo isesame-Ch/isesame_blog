@@ -12,8 +12,8 @@ class CreateFirstAdmin extends Seeder
     public function run()
     {
         DB::table('user')->insert([
-            'username' => 'admin',
-            'password' => md5('admin'),
+            'username' => 'admin1234',
+            'password' => md5('admin1234'),
             'nickname' => '超级管理员',
             'email' => '123@email.com',
             'created_at' => time()
