@@ -17,4 +17,12 @@ class AdminModel extends BaseModel
      * @var array
      */
     #protected $fillable = [''];
+
+    /**
+     * 管理员账户信息
+     */
+    public function userInfo()
+    {
+        return $this->hasOne(UserModel::class, 'id','user_id');
+    }
 }

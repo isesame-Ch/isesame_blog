@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>西山小站</title>
+    <title>芝麻小站</title>
     <!-- Le styles -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -609,7 +609,6 @@
                     if (data.content.length > 0) {
                         $list = data.content;
                         $list.forEach(function ($item) {
-                            $item.created_time = tsToDate('Y-m-d',$item.created_time);
                             $("#support_list").append(
                                 " <li class=\"recommend_li\"><a href=\"/article/article_id/"+$item.id+"\"><p class=\"article_title\">"+$item.article_name+"</p><span>"+$item.created_at+"</span></a></li>"
                             )

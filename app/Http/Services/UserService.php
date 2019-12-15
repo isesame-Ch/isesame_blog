@@ -9,7 +9,19 @@
 namespace App\Http\Services;
 
 
+use App\Models\UserModel;
+
 class UserService extends BaseService
 {
+    /**
+     * 根据用户名获取用户信息
+     * @param $username
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|null|object
+     */
+    public function getByUserName($username)
+    {
+        $user = UserModel::query()->where('username', $username)->first();
 
+        return $user;
+    }
 }

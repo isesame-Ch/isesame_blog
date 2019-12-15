@@ -10,7 +10,7 @@
     <meta name="author" content="order by dede58.com"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>西山小站后台</title>
+    <title>芝麻小站后台</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!-- Bootstrap core CSS -->
@@ -69,7 +69,7 @@
                             <a href="javascript:void(0);"><i class="fa fa-cogs"></i><span>用户管理</span><i class="arrow fa fa-angle-right pull-right"></i></a>
                             <ul>
                                 <li>
-                                    <a href="/backend/user/list">用户列表</a>
+                                    <a href="/backend/user/show">用户列表</a>
                                 </li>
                                 <li>
                                     <a href="/backend/admin/list">权限列表</a>
@@ -142,9 +142,6 @@
     <script src="/js/plugins/waypoints/waypoints.min.js"></script>
     <script src="/js/backend/application.js"></script>
     <script>
-        $cacheKey = $.cookie('admin-key');
-        $token = $.cookie('admin-token');
-
         //判断权限
         if ($.cookie('admin-user') && JSON.parse($.cookie('admin-user'))['identity'] !== 1)
         {
@@ -155,30 +152,28 @@
 
         //监听变化，cookie过期就重新登录
         window.onchange = function () {
-            if (!$cacheKey || $cacheKey == null || !$token || $token == null){
+            if (!$.cookie('admin-user') || $.cookie('admin-user') == null ){
                 window.location = '/backend/login';
             }
         };
         $("body").on('click','button',function () {
-            if (!$cacheKey || $cacheKey == null || !$token || $token == null){
+            if (!$.cookie('admin-user') || $.cookie('admin-user') == null ){
                 window.location = '/backend/login';
             }
         });
         $("body").on('click','input',function () {
-            if (!$cacheKey || $cacheKey == null || !$token || $token == null){
+            if (!$.cookie('admin-user') || $.cookie('admin-user') == null ){
                 window.location = '/backend/login';
             }
         });
         $("body").on('click','a',function () {
-            if (!$cacheKey || $cacheKey == null || !$token || $token == null){
+            if (!$.cookie('admin-user') || $.cookie('admin-user') == null ){
                 window.location = '/backend/login';
             }
         });
 
-
         //加载用户头像或登陆按钮
-        if ($.cookie('admin-user') && $.cookie('admin-key'))
-        {
+        if ($.cookie('admin-user')) {
             $("#user_ul").html(
                 '<li class="profile-photo">\n' +
                 '    <img src="/uploads'+JSON.parse($.cookie('admin-user')).head_pic+'" alt="" style="width: 25px;height:25px" class="img-circle" id="admin_head_pic">\n' +
@@ -195,7 +190,7 @@
                 '    </ul>\n' +
                 '</li>'
             )
-        }else {
+        } else {
             window.location = '/backend/login';
         }
 
@@ -203,25 +198,24 @@
         $("#logOut").on('click',function () {
             $.ajax({
                 type:"POST",
-                url:"/backend/admin/signout",
+                url:"/backend/logout",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                data:{'cacheKey':$cacheKey,'token':$token},
+                data:'',
                 dataType:"json",
                 success:function (data) {
                     if (data.code == 0)
                     {
-                        $.cookie('admin-key', null, { expires: -1 });
-                        $.cookie('admin-token', null, { expires: -1 });
                         $.cookie('admin-user',null, { expires: -1 });
-                        alert(''+data.content.message+'');
-                        window.location = ''+data.content.url+'';
+                        alert('拜拜~');
+                        window.location = '/backend/login';
+                    } else {
+                        alert(data.message);
                     }
                 },
                 error: function (e) {
-                    if(e.responseJSON.message)
-                    {
+                    if(e.responseJSON.message) {
                         alert(e.responseJSON.message);
                     }
                 }

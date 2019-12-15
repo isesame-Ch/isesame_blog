@@ -105,7 +105,6 @@
                     data:{'article_id':id},
                     dataType:'json',
                     success:function (data) {
-                        data.content.created_time = tsToDate('Y-m-d H:i:s','' + data.content.created_time + '');
                         $('#article_title').html(data.content.article_name);
                         $('#article_content').html(data.content.article_content);
                         $('#article_author').html(data.content.article_author);

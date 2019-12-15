@@ -39,7 +39,6 @@ Route::group(['namespace' => 'App'], function () {
     //前端--文章--详情
     Route::get('/article/detail', 'ArticleController@detail');
 
-
     //前端--小游戏
     Route::get('/game',function (){return view('APP.game');});
 });
@@ -47,32 +46,39 @@ Route::group(['namespace' => 'App'], function () {
 
 
 ############    后台管理路由    #############
-
-//前端--用户登陆
+//后端--用户登陆
 Route::get('/backend/login',function (){return view('Backend.login');});
-//前端--后台首页
-Route::get('backend/index',function (){return view('Backend.index');});
-//前端--用户--列表
-Route::get('backend/user/list',function (){return view('Backend.userList');});
-//前端--权限--列表
-Route::get('backend/admin/list',function (){return view('Backend.adminList');});
-//前端--文章--发布
-Route::get('backend/article/release',function (){return view('Backend.releaseArticle');});
-//前端--文章--列表
-Route::get('backend/article/list',function (){return view('Backend.articleList');});
-//前端--文章--编辑
-Route::get('backend/article/edit/{id}',function ($id){return view('Backend.updateArticle',['id' => $id]);});
-//前端--文章--分类管理
-Route::get('backend/article/category',function (){return view('Backend.articleCategoryList');});
-
-
-
 //后端--用户登陆
 Route::post('/backend/login',['uses'=>'Backend\AdminController@login']);
-Route::group(['namespace'=>'Backend', 'middleware'=>['BackendAuth'], 'prefix'=>'backend'],function () use ($router)
+
+Route::group(['namespace'=>'Backend', 'prefix'=>'backend'],function () use ($router)
 {
+    //后端--后台首页
+    Route::get('/index','AdminController@index');
+    //后端--登出
+    Route::post('/logout',['uses' => 'AdminController@logout']);
+    //后端--用户--列表页
+    Route::get('/user/show', 'UserController@show');
     //后端--用户--列表
-    Route::get('/user/getlist', ['uses' => 'UserController@getList']);
+    Route::get('/user/list', ['uses' => 'UserController@getList']);
+
+
+    //后端--权限--列表页
+    Route::get('/admin/list',function (){return view('Backend.adminList');});
+    //后端--文章--发布页
+    Route::get('/article/release',function (){return view('Backend.releaseArticle');});
+    //后端--文章--列表页
+    Route::get('/article/list',function (){return view('Backend.articleList');});
+    //后端--文章--编辑页
+    Route::get('/article/edit/{id}',function ($id){return view('Backend.updateArticle',['id' => $id]);});
+    //后端--文章--分类管理页
+    Route::get('/article/category',function (){return view('Backend.articleCategoryList');});
+
+
+
+
+
+
     //后端--用户--编辑
     Route::post('/user/edit', ['uses' => 'UserController@edit']);
     //后端--用户--删除
@@ -81,8 +87,6 @@ Route::group(['namespace'=>'Backend', 'middleware'=>['BackendAuth'], 'prefix'=>'
     Route::post('/user/add',['uses'=>'UserController@registered']);
     //后端--用户--上传图片
     Route::post('/user/upload_pic',['uses'=>'UserController@uploadPic']);
-    //后端--权限--登出
-    Route::post('/admin/signout',['uses' => 'AdminController@signOut']);
     //后端--权限--列表
     Route::get('/admin/getlist',['uses'=>'AdminController@getList']);
     //后端--权限--添加管理员

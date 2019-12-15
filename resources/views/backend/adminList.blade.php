@@ -218,7 +218,7 @@
                             $list = data.content.list;
                             $i=1;
                             $list.forEach(function ($item) {
-                                $item.created_time = tsToDate('Y/m/d H:i:s',''+$item.created_time+'');
+                                $item.created_at = $item.created_at;
                                 $("#admin_list tbody").append(
                                     "<tr>" +
                                     "<td class=\"num\">"+$i+"</td>" +
@@ -227,7 +227,7 @@
                                     "<td class=\"username\">"+$item.identity+"</td>" +
                                     "<td class=\"nickname\">"+$item.nickname+"</td>" +
                                     "<td class=\"email\">"+$item.email+"</td>" +
-                                    "<td class=\"created_at\">"+$item.created_time+"</td>" +
+                                    "<td class=\"created_time\">"+$item.created_at+"</td>" +
                                     "<td>" +
                                     "<button class=\"btn btn-primary btn-sm edit_btn\" data-toggle=\"modal\" data-target=\"#updateModal\" style=\"margin-left: 5px\">编辑</button>" +
                                     "<button class=\"btn btn-danger btn-sm delete_btn\" style=\"margin-left: 5px\">删除</button>" +

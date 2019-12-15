@@ -81,10 +81,8 @@ class UserController extends Controller
         ];
         $data = $this->filterParams($request, $rules);
 
-        $user = UserModel::query()->where('username', $data['username'])->first();
-
-        if (!$user || empty($user))
-        {
+        $user = $this->userService->getByUserName($data['username']);
+        if (!$user || empty($user)) {
             throw new \Exception('没有该账号，请注册后登陆',ErrorCode::USER_ERROR);
         }
         if ($user->password != $data['password']) {

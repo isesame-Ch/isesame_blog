@@ -235,7 +235,7 @@
                             $list = data.content.list;
                             $i=1;
                             $list.forEach(function ($item) {
-                                $item.created_time = tsToDate('Y/m/d H:i:s',''+$item.created_time+'');
+                                $item.created_at = $item.created_at;
                                 $("#article_list tbody").append(
                                     "<tr>" +
                                     "<td class=\"num\">"+$i+"</td>" +
@@ -245,7 +245,7 @@
                                     "<td class=\"category_id\" style=\"display:none\">"+$item.category_id+"</td>" +
                                     "<td class=\"category_name\">"+$item.category_name+"</td>" +
                                     "<td class=\"article_view\">"+$item.article_view+"</td>" +
-                                    "<td class=\"created_time\">"+$item.created_time+"</td>" +
+                                    "<td class=\"created_time\">"+$item.created_at+"</td>" +
                                     "<td class=\"article_type\" style=\"display:none\">"+$item.article_type+"</td>" +
                                     "<td class=\"article_support\" style=\"display:none\">"+$item.article_support+"</td>" +
                                     "<td>" +

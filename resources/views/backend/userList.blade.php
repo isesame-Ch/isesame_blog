@@ -38,7 +38,7 @@
                                     <input type="email" class="form-control" id="email" name="email"autocomplete="off">
                                 </div>
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-trans form-control" id="search_btn">搜索</button>
+                                    <button type="button" class="btn btn-primary btn-trans form-control" id="search_btn" style="margin-top: 5px">搜索</button>
                                 </div>
                             </form>
                             <!-- Button trigger modal -->
@@ -208,15 +208,14 @@
                 $data = $("#search_form").serialize();
                 $_page = page;
                 $_page_size = page_size;
-                $data = $data+"&page="+$_page+"&page_size="+$_page_size+"&cacheKey="+$cacheKey+"&token="+$token;
+                $data = $data+"&page="+$_page+"&page_size="+$_page_size;
                 $.ajax({
                     type:"GET",
-                    url:"/backend/user/getlist",
+                    url:"/backend/user/list",
                     data:$data,
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             //清空表格和分页
                             $("#user_list tbody").html('');
                             $("#user_list ul").remove();
@@ -238,10 +237,9 @@
                             $lis[data.content.current_page].className = 'active';
 
                             //加载表格
-                            $list = data.content.list;
+                            $list = data.content.data;
                             $i=1;
                             $list.forEach(function ($item) {
-                                $item.created_time = tsToDate('Y/m/d H:i:s',''+$item.created_time+'');
                                 $("#user_list tbody").append(
                                     "<tr>" +
                                     "<td class=\"num\">"+$i+"</td>" +
@@ -249,7 +247,7 @@
                                     "<td class=\"username\">"+$item.username+"</td>" +
                                     "<td class=\"nickname\">"+$item.nickname+"</td>" +
                                     "<td class=\"email\">"+$item.email+"</td>" +
-                                    "<td class=\"created_at\">"+$item.created_time+"</td>" +
+                                    "<td class=\"created_at\">"+$item.created_at+"</td>" +
                                     "<td>" +
                                     "<button class=\"btn btn-primary btn-sm edit_btn\" data-toggle=\"modal\" data-target=\"#updateModal\" style=\"margin-left: 5px\">编辑</button>" +
                                     "<button class=\"btn btn-danger btn-sm delete_btn\" style=\"margin-left: 5px\">删除</button>" +
@@ -258,6 +256,10 @@
                                 );
                                 $i++;
                             })
+                        } else {
+                            $("#search_alert").removeClass("hidden");
+                            $("#search_alert span").html("<strong>出错喽~！</strong>");
+                            $("#search_alert span").append("<strong>"+data.message+"</strong>");
                         }
                     },
                     error: function (e) {

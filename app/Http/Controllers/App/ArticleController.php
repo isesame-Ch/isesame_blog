@@ -54,9 +54,6 @@ class ArticleController extends Controller
             'article_name' => 'string|nullable',
             'article_author' => 'string|nullable|max:20',
         ];
-        if (!Auth::check()) {
-            throw new \Exception('请先登录',ErrorCode::USER_HAS_NOT_LOGIN);
-        }
 
         $articles = $this->obj2Array(
             ArticleModel::getList(

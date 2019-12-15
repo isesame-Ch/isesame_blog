@@ -171,6 +171,7 @@
     </div>
 </div>
 
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/jquery.cookie.js"></script>
 <script src="/js/bootstrap.min.js"></script>
@@ -214,7 +215,7 @@
             $.ajax({
                 type: "POST",
                 url: "/backend/login",
-                data:{'username':username,'password':password},
+                data:{'username':username,'password':md5(password)},
                 dataType:"json",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -225,16 +226,14 @@
                         $("#loading").css("display","none");
                         if (data.code == 0) {
                             //清空之前的cookie
-                            $.cookie('admin-key', null, { expires: -1 });
-                            $.cookie('admin-token', null, { expires: -1 });
                             $.cookie('admin-user',null, { expires: -1 });
                             //设置三小时过期
                             var cookie_expires = new Date();
                             cookie_expires.setTime(cookie_expires.getTime()+3*3600*1000);
-                            $.cookie('admin-key',data.content.admin_key,{ expires: cookie_expires });
-                            $.cookie('admin-token',data.content.admin_token,{ expires: cookie_expires });
                             $.cookie('admin-user',JSON.stringify(data.content.admin_user),{ expires: cookie_expires });
-                            window.location = ''+data.content.url+'?cacheKey='+data.content.admin_key+'&token='+data.content.admin_token;
+                            window.location = '/backend/index';
+                        } else {
+                            $("#tip").text(data.message);
                         }
                     },3000);
                 },

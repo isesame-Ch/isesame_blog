@@ -339,42 +339,42 @@
 
 <!--Load these page level functions-->
 @section('js')
-    <!-- FlotCharts  -->
-    <script src="/js/plugins/flot/js/jquery.flot.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.resize.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.canvas.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.image.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.categories.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.crosshair.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.errorbars.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.fillbetween.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.navigate.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.pie.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.selection.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.stack.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.symbol.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.threshold.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.colorhelpers.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.time.min.js"></script>
-    <script src="/js/plugins/flot/js/jquery.flot.example.js"></script>
-    <!-- Morris  -->
-    <script src="/js/plugins/morris/js/morris.min.js"></script>
-    <script src="/js/plugins/morris/js/raphael.2.1.0.min.js"></script>
-    <!-- Vector Map  -->
-    <script src="/js/plugins/jvectormap/js/jquery-jvectormap-1.2.2.min.js"></script>
-    <script src="/js/plugins/jvectormap/js/jquery-jvectormap-world-mill-en.js"></script>
-    <!-- ToDo List  -->
-    <script src="/js/plugins/todo/js/todos.js"></script>
-    <!--Page Level JS-->
-    <script src="/js/plugins/countTo/jquery.countTo.js"></script>
-    <script src="/js/plugins/weather/js/skycons.js"></script>
-    <script>
-        $(document).ready(function() {
-            app.timer();
-            app.map();
-            app.weather();
-            app.morrisPie();
-        });
-    </script>
+<!-- FlotCharts  -->
+<script src="/js/plugins/flot/js/jquery.flot.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.resize.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.canvas.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.image.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.categories.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.crosshair.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.errorbars.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.fillbetween.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.navigate.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.pie.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.selection.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.stack.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.symbol.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.threshold.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.colorhelpers.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.time.min.js"></script>
+<script src="/js/plugins/flot/js/jquery.flot.example.js"></script>
+<!-- Morris  -->
+<script src="/js/plugins/morris/js/morris.min.js"></script>
+<script src="/js/plugins/morris/js/raphael.2.1.0.min.js"></script>
+<!-- Vector Map  -->
+<script src="/js/plugins/jvectormap/js/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="/js/plugins/jvectormap/js/jquery-jvectormap-world-mill-en.js"></script>
+<!-- ToDo List  -->
+<script src="/js/plugins/todo/js/todos.js"></script>
+<!--Page Level JS-->
+<script src="/js/plugins/countTo/jquery.countTo.js"></script>
+<script src="/js/plugins/weather/js/skycons.js"></script>
+<script>
+    $(document).ready(function() {
+        app.timer();
+        app.map();
+        app.weather();
+        app.morrisPie();
+    });
+</script>
 @stop
 
