@@ -31,7 +31,8 @@ class ErrorCode
     const USER_PASSWORD_ERROR       = 10004;    // 用户密码错误
     const USER_HAS_NOT_LOGIN        = 10005;    // 用户未登录
 
-    const ADMIN_ERROR                = 10003;    // 该用户不是管理员
+    const ADMIN_ERROR               = 10010;    // 该用户不是管理员
+    const FILE_EXTENSION_ERROR      = 10020;    // 文件格式错误
 
 
     // 系统级错误

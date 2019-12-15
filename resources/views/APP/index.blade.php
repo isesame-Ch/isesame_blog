@@ -218,7 +218,7 @@
                                 $lis[data.content.current_page].className = 'active';
 
                                 //加载文章列表
-                                $list = data.content.data;
+                                $list = data.content.list;
                                 $list.forEach(function ($item) {
                                     // $item.created_at = tsToDate('Y/m/d H:i:s',''+$item.created_at+'');
                                     $("#article_list #article_ul").append(

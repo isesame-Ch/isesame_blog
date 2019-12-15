@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 
 class UserModel extends Authenticatable
 {
+    use SoftDeletes;
     protected $table = 'user';
 
     /**
@@ -22,14 +24,14 @@ class UserModel extends Authenticatable
      * 不可以被批量赋值的属性。
      * @var array
      */
-    #protected $guarded = [''];
+    protected $guarded = [''];
 
     /**
      * 可以被批量赋值的属性。
      * @var array
      */
     protected $fillable = [
-        'username', 'password',''
+        'username', 'nickname','email','updated_at'
     ];
        
     protected $hidden = [ 
@@ -54,7 +56,7 @@ class UserModel extends Authenticatable
      */
     public static function isUserNameExists($userName, $nickName)
     {
-        return self::query()->where('username', $userName)->orWhere('nickname', $nickName)->exists();
+        return self::query()->withTrashed()->where('username', $userName)->orWhere('nickname', $nickName)->exists();
     }
 
     /**

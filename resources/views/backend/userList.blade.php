@@ -237,7 +237,7 @@
                             $lis[data.content.current_page].className = 'active';
 
                             //加载表格
-                            $list = data.content.data;
+                            $list = data.content.list;
                             $i=1;
                             $list.forEach(function ($item) {
                                 $("#user_list tbody").append(
@@ -311,7 +311,7 @@
 
             $("#update_btn").on("click",function () {
                 var data = $("#edit_form").serialize();
-                data = data+"&cacheKey="+$cacheKey+"&token="+$token;
+                data = data;
                 $.ajax({
                     url:'/backend/user/edit',
                     type:'post',
@@ -321,14 +321,16 @@
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             alert('编辑成功');
+                            window.location.reload();
+                        } else {
+                            alert('编辑失败:'+data.message);
                             window.location.reload();
                         }
                     },
                     error:function (e) {
-                        alert('编辑失败');
+                        alert('编辑失败:'+e.responseJSON.message);
                         window.location.reload();
                     }
 
@@ -342,22 +344,24 @@
                 $.ajax({
                     url:'/backend/user/delete',
                     type:'post',
-                    data:{'user_id':id,'cacheKey':$cacheKey,'token':$token},
+                    data:{'user_id':id},
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             alert('删除成功');
+                            window.location.reload();
+                        } else {
+                            alert('删除失败');
                             window.location.reload();
                         }
                     },
                     error:function (e) {
                         console.log(e);
                         alert('删除失败');
-                        window.location.reload();
+                        // window.location.reload();
                     }
 
                 })
@@ -366,21 +370,24 @@
             //上传图片
             $("#upload_pic").on("change",function () {
                 var upload_pic = new FormData($("#photoForm")[0]);
+                console.log(upload_pic);
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
+                    dataType: "json",
                     type: 'POST',
                     url:'/backend/user/upload_pic',
-                    data: {'upload_pic':upload_pic,'cacheKey':$cacheKey,'token':$token},
+                    data: new FormData($("#photoForm")[0]),
                     processData:false,
                     contentType: false,
                     cache: false,
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             $("#new_head_pic").val(data.content);
                             $("#upload_img").attr('src','/uploads'+data.content);
+                        } else {
+                            alert('图片上传失败');
                         }
                     },
                     error:function (e) {
@@ -393,7 +400,7 @@
             //添加用户
             $("#add_btn").on("click",function () {
                 var data = $("#add_form").serialize();
-                data = data+"&cacheKey="+$cacheKey+"&token="+$token;
+                data = data+"&cacheKey=";
 
                 $.ajax({
                     url:'/backend/user/add',
@@ -404,23 +411,17 @@
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
-                            if (data.content.stateCode == 401)
-                            {
-                                alert(data.content.message);
-                                window.location.reload();
-                            }else {
-                                alert('添加成功');
-                                console.log(data);
-                                window.location.reload();
-                            }
+                        if (data.code == 0) {
+                            alert('添加成功');
+                            console.log(data);
+                            window.location.reload();
+                        } else {
+                            alert(data.message);
                         }
                     },
                     error:function (e) {
                         console.log(e);
-                        alert('添加失败');
-                        window.location.reload();
+                        alert('添加失败:'+e.responseJSON.message);
                     }
 
                 })

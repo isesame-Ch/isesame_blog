@@ -82,7 +82,7 @@ class UserController extends Controller
         $data = $this->filterParams($request, $rules);
 
         $user = $this->userService->getByUserName($data['username']);
-        if (!$user || empty($user)) {
+        if (empty($user)) {
             throw new \Exception('没有该账号，请注册后登陆',ErrorCode::USER_ERROR);
         }
         if ($user->password != $data['password']) {

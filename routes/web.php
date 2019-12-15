@@ -57,11 +57,19 @@ Route::group(['namespace'=>'Backend', 'prefix'=>'backend'],function () use ($rou
     Route::get('/index','AdminController@index');
     //后端--登出
     Route::post('/logout',['uses' => 'AdminController@logout']);
+
     //后端--用户--列表页
     Route::get('/user/show', 'UserController@show');
     //后端--用户--列表
-    Route::get('/user/list', ['uses' => 'UserController@getList']);
-
+    Route::get('/user/list', 'UserController@getList');
+    //后端--用户--编辑
+    Route::post('/user/edit', 'UserController@edit');
+    //后端--用户--删除
+    Route::post('/user/delete','UserController@deleted');
+    //后端--用户--注册
+    Route::post('/user/add', 'UserController@create');
+    //后端--用户--上传图片
+    Route::post('/user/upload_pic','UserController@uploadPic');
 
     //后端--权限--列表页
     Route::get('/admin/list',function (){return view('Backend.adminList');});
@@ -79,14 +87,8 @@ Route::group(['namespace'=>'Backend', 'prefix'=>'backend'],function () use ($rou
 
 
 
-    //后端--用户--编辑
-    Route::post('/user/edit', ['uses' => 'UserController@edit']);
-    //后端--用户--删除
-    Route::post('/user/delete', ['uses' => 'UserController@delete']);
-    //后端--用户--注册
-    Route::post('/user/add',['uses'=>'UserController@registered']);
-    //后端--用户--上传图片
-    Route::post('/user/upload_pic',['uses'=>'UserController@uploadPic']);
+
+
     //后端--权限--列表
     Route::get('/admin/getlist',['uses'=>'AdminController@getList']);
     //后端--权限--添加管理员

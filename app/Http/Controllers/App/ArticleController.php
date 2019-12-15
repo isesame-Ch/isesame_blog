@@ -68,7 +68,7 @@ class ArticleController extends Controller
             $item['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
         }
 
-        $this->setKeyContent($articles);
+        $this->setKeyContent($this->listData($articles));
         return $this->responseArray();
     }
 

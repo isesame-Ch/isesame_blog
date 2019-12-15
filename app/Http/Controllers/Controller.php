@@ -175,4 +175,19 @@ class Controller extends BaseController
     {
         return json_decode(json_encode($obj), true);
     }
+
+    /**
+     * @param $list
+     * @return array
+     */
+    public function listData($list)
+    {
+        return [
+            'list' => $list['data'],
+            'current_page' => $list['current_page'],
+            'total_page' => $list['last_page'],
+            'page_size' => $list['per_page'],
+            'total' => $list['total']
+        ];
+    }
 }
