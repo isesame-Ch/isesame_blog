@@ -170,22 +170,26 @@
             function getCategoryList(){
                 $.ajax({
                     type:'GET',
-                    url:'/backend/article/categorylist',
-                    data:{'cacheKey':$cacheKey,'token':$token},
+                    url:'/backend/article/category/all',
+                    data:'',
                     dataType:'json',
                     success:function (data) {
-                        var list = data.content.list;
-                        list.forEach(function ($item) {
-                            $(".category_select").append(
-                                "<option value='"+$item.id+"'>"+$item.name+"</option>"
-                            )
-                        });
+                        if (data.code == 0) {
+                            var list = data.content;
+                            list.forEach(function ($item) {
+                                $(".category_select").append(
+                                    "<option value='"+$item.id+"'>"+$item.name+"</option>"
+                                )
+                            });
+                        } else {
+                            $("#search_alert").removeClass("hidden");
+                            $("#search_alert span").html("<strong>出错喽~！</strong>");
+                        }
                     },
                     error:function (e) {
                         $("#search_alert").removeClass("hidden");
                         $("#search_alert span").html("<strong>出错喽~！</strong>");
-                        if (typeof e.responseJSON.errors !== 'undefined')
-                        {
+                        if (typeof e.responseJSON.errors !== 'undefined') {
                             for($item in e.responseJSON.errors) {
                                 $("#search_alert span").html($item + "格式不符合要求");
                             }
@@ -200,7 +204,7 @@
 
                 var _page = page;
                 var _page_size = page_size;
-                data = data+"&page="+_page+"&page_size="+_page_size+"&cacheKey="+$cacheKey+"&token="+$token;
+                data = data+"&page="+_page+"&page_size="+_page_size;
 
                 $.ajax({
                     type:'get',
@@ -317,7 +321,6 @@
 
             $("#update_btn").on("click",function () {
                 var data = $("#edit_form").serialize();
-                data = data+"&cacheKey="+$cacheKey+"&token="+$token;
 
                 $.ajax({
                     url:'/backend/article/edit',
@@ -328,10 +331,11 @@
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             alert('编辑成功');
                             window.location.reload();
+                        } else {
+                            alert('出错喽~！'+data.message);
                         }
                     },
                     error:function (e) {
@@ -354,7 +358,7 @@
                 $.ajax({
                     url:'/backend/article/delete',
                     type:'post',
-                    data:{'article_id':id,'cacheKey':$cacheKey,'token':$token},
+                    data:{'article_id':id},
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -389,14 +393,13 @@
                 $.ajax({
                     url:'/backend/article/remove',
                     type:'post',
-                    data:{'article_id':id,'cacheKey':$cacheKey,'token':$token},
+                    data:{'article_id':id},
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             alert('彻底移除');
                             window.location.reload();
                         }
@@ -419,7 +422,7 @@
                 var td = $(this).parent().parent().children('td');
                 var id = td[1].innerText;
 
-                window.location = '/backend/article/edit/'+id+'?cacheKey='+$cacheKey+'&token='+$token;
+                window.location = '/backend/article/edit/'+id;
             });
 
 

@@ -400,7 +400,6 @@
             //添加用户
             $("#add_btn").on("click",function () {
                 var data = $("#add_form").serialize();
-                data = data+"&cacheKey=";
 
                 $.ajax({
                     url:'/backend/user/add',

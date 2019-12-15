@@ -51,7 +51,7 @@ Route::get('/backend/login',function (){return view('Backend.login');});
 // 后端--用户登陆
 Route::post('/backend/login',['uses'=>'Backend\AdminController@login']);
 
-Route::group(['namespace'=>'Backend', 'prefix'=>'backend'],function () use ($router)
+Route::group(['namespace'=>'Backend', 'prefix'=>'backend', 'middleware' => ['admin.auth']],function () use ($router)
 {
     // 后端--后台首页
     Route::get('/index','AdminController@index');
@@ -89,37 +89,41 @@ Route::group(['namespace'=>'Backend', 'prefix'=>'backend'],function () use ($rou
     #########
 
     // 后端--文章--发布页
-    Route::get('/article/release',function (){return view('Backend.releaseArticle');});
-    // 后端--文章--列表页
-    Route::get('/article/list',function (){return view('Backend.articleList');});
-    // 后端--文章--编辑页
-    Route::get('/article/edit/{id}',function ($id){return view('Backend.updateArticle',['id' => $id]);});
-    // 后端--文章--分类管理页
-    Route::get('/article/category',function (){return view('Backend.articleCategoryList');});
-
-    // 后端--文章--获取分类列表
-    Route::get('/article/categorylist', ['uses' => 'ArticleController@categoryList']);
+    Route::get('/article/show','ArticleController@show');
     // 后端--文章--发布
-    Route::post('/article/release', ['uses' => 'ArticleController@release']);
-    // 后端--文章--上传图片
-    Route::post('/article/upload_pic',['uses'=>'ArticleController@uploadPic']);
+    Route::post('/article/release', 'ArticleController@release');
+    // 后端--文章--上传首页图片
+    Route::post('/article/upload_pic','ArticleController@uploadPic');
+
+    // 后端--文章--列表页
+    Route::get('/article/list/show', 'ArticleController@listShow');
     // 后端--文章--列表
     Route::get('/article/getlist', ['uses' => 'ArticleController@getList']);
-    // 后端--文章--编辑
-    Route::post('/article/edit', ['uses' => 'ArticleController@edit']);
     // 后端--文章--删除
     Route::post('/article/delete', ['uses' => 'ArticleController@delete']);
     // 后端--文章--彻底删除
     Route::post('/article/remove', ['uses' => 'ArticleController@remove']);
+    // 后端--文章--编辑
+    Route::post('/article/edit', ['uses' => 'ArticleController@edit']);
+
+
+    // 后端--文章--编辑页
+    Route::get('/article/edit/{id}', 'ArticleController@editShow');
     // 后端--文章--详情
-    Route::get('/article/detail', ['uses' => 'ArticleController@detail']);
+    Route::get('/article/detail', 'ArticleController@detail');
+    // 后端--文章--分类管理列表页
+    Route::get('/article/category/show','ArticleController@categoryShow');
+    // 后端--文章--获取所有分类列表
+    Route::get('/article/category/all', 'ArticleController@getCategoryList');
     // 后端--文章分类--列表
-    Route::get('/article/category/list', ['uses' => 'ArticleCategoryController@getList']);
+    Route::get('/article/category/list', 'ArticleController@getCategoryList');
     // 后端--文章分类--编辑
-    Route::post('/article/category/edit', ['uses' => 'ArticleCategoryController@edit']);
+    Route::post('/article/category/edit', 'ArticleController@editCategory');
     // 后端--文章分类--删除
-    Route::post('/article/category/delete', ['uses' => 'ArticleCategoryController@delete']);
+    Route::post('/article/category/delete', 'ArticleController@deleteCategory');
     // 后端--文章分类--添加
-    Route::post('/article/category/add', ['uses' => 'ArticleCategoryController@add']);
+    Route::post('/article/category/add', 'ArticleController@addCategory');
 
 });
+
+Route::post('/editormd/image/upload', 'Backend\ArticleController@editormdUpload');

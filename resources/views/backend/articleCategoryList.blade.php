@@ -144,7 +144,7 @@
                                     <th style="display:none">id</th>
                                     <th style="display:none">父级id</th>
                                     <th>分类名</th>
-                                    <th>状态</th>
+                                    {{--<th>状态</th>--}}
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -174,11 +174,11 @@
             function getCategoryList(){
                 $.ajax({
                     type:'GET',
-                    url:'/backend/article/categorylist',
-                    data:{'cacheKey':$cacheKey,'token':$token},
+                    url:'/backend/article/category/all',
+                    data:{},
                     dataType:'json',
                     success:function (data) {
-                        var list = data.content.list;
+                        var list = data.content;
                         list.forEach(function ($item) {
                             $(".category_select").append(
                                 "<option value='"+$item.id+"'>"+$item.name+"</option>"
@@ -203,7 +203,7 @@
                 var data = $("#search_form").serialize();
                 var _page = page;
                 var _page_size = page_size;
-                data = data+"&page="+_page+"&page_size="+_page_size+"&cacheKey="+$cacheKey+"&token="+$token;
+                data = data+"&page="+_page+"&page_size="+_page_size;
 
                 $.ajax({
                     type:'GET',
@@ -211,8 +211,7 @@
                     data:data,
                     dataType:'json',
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             //清空表格和分页
                             $("#category_list tbody").html('');
                             $("#category_list ul").remove();
@@ -238,14 +237,13 @@
                             $list = data.content.list;
                             $i=1;
                             $list.forEach(function ($item) {
-                                $item.created_at = $item.created_at;
                                 $("#category_list tbody").append(
                                     "<tr>" +
                                     "<td class=\"num\">"+$i+"</td>" +
                                     "<td class=\"id\" style=\"display:none\">"+$item.id+"</td>" +
                                     "<td class=\"parent_id\" style=\"display:none\">"+$item.parent_id+"</td>" +
                                     "<td class=\"name\">"+$item.name+"</td>" +
-                                    "<td class=\"state\">"+$item.state+"</td>" +
+                                    // "<td class=\"state\">"+$item.state+"</td>" +
                                     "<td class=\"created_time\">"+$item.created_at+"</td>" +
                                     "<td>" +
                                     "<button class=\"btn btn-primary btn-sm edit_btn\" style=\"margin-left: 5px\" data-toggle=\"modal\" data-target=\"#updateModal\">编辑</button>" +
@@ -309,7 +307,6 @@
 
             $("#update_btn").on("click",function () {
                 var data = $("#edit_form").serialize();
-                data = data+"&cacheKey="+$cacheKey+"&token="+$token;
 
                 $.ajax({
                     url:'/backend/article/category/edit',
@@ -346,7 +343,7 @@
                 $.ajax({
                     url:'/backend/article/category/delete',
                     type:'post',
-                    data:{'category_id':id,'cacheKey':$cacheKey,'token':$token},
+                    data:{'category_id':id},
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -374,7 +371,6 @@
             //添加分类
             $("#add_btn").on('click',function () {
                 var data = $("#add_form").serialize();
-                data = data+"&cacheKey="+$cacheKey+"&token="+$token;
 
                 $.ajax({
                     type:'POST',

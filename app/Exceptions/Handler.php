@@ -47,49 +47,45 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Exception $e
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Exception  $e
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $e)
     {
-        //if (env('APP_ENV') == 'prod' || env('APP_ENV') == 'true') {
-        if (true) {
-            if ($e instanceof NotFoundHttpException) {
-                return response([
-                    'code' => 404,
-                    'message' => 'The api you request is not found!!',
-                    'content' => '',
-                    'contentEncrypt' => ''
-                ])->setStatusCode(200);
-            } else if ($e instanceof MethodNotAllowedHttpException) {
-                return response([
-                    'code' => 500,
-                    'message' => 'The api you request is not found!',
-                    'content' => '',
-                    'contentEncrypt' => ''
-                ])->setStatusCode(200);
-            } else if ($e instanceof ValidationException) {
-                return response([
-                    'code' => $e->getResponse()->getStatusCode(),//getStatusCode()
-                    'message' => '数据校验失败',
-                    'content' => json_decode($e->getResponse()->getContent(), true),
-                    'contentEncrypt' => ''
-                ])->setStatusCode(200);
-            } else {
-                $message = $e->getMessage();
-                if (strpos($message, 'SQL') !== false) {
-                    $message = '数据库错误';
-                    $this->logDatabaseError($request, $e);
-                }
-                return response([
-                    'code' => $e->getCode() == 0 ? 500 : $e->getCode(),
-                    'message' => $message ? $message : '未知异常',
-                    'content' => '',
-                    'contentEncrypt' => ''
-                ])->setStatusCode(200);
-            }
+
+        if ($e instanceof NotFoundHttpException) {
+            return response([
+                'code' => 404,
+                'message' => 'The api you request is not found!!',
+                'content' => '',
+                'contentEncrypt' => ''
+            ])->setStatusCode(200);
+        } else if ($e instanceof MethodNotAllowedHttpException) {
+            return response([
+                'code' => 500,
+                'message' => 'The api you request is not found!',
+                'content' => '',
+                'contentEncrypt' => ''
+            ])->setStatusCode(200);
+        } else if ($e instanceof ValidationException) {
+            return response([
+                'code' => $e->getResponse()->getStatusCode() ,//getStatusCode()
+                'message' => '数据校验失败',
+                'content' => json_decode($e->getResponse()->getContent(), true),
+                'contentEncrypt' => ''
+            ])->setStatusCode(200);
+        } else {
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response([
+                'code' => $code ? $code : 405,
+                'message' => $message ? $message : '未知异常',
+                'content' => '',
+                'contentEncrypt' => ''
+            ])->setStatusCode(200);
         }
+
         return parent::render($request, $e);
 
     }

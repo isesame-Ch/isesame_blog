@@ -32,9 +32,9 @@ class AdminController extends Controller
      */
     public function __construct(UserService $userService, AdminService $adminService)
     {
-        $this->middleware('admin.auth',[
-            'except' => ['logout','login']
-        ]);
+//        $this->middleware('admin.auth',[
+//            'except' => ['logout','login']
+//        ]);
 
         $this->userService = $userService;
         $this->adminService = $adminService;
@@ -79,9 +79,10 @@ class AdminController extends Controller
      * 登出
      * @return AdminController
      */
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->flush();
         $this->setKeyContent();
         return $this->responseArray();
     }

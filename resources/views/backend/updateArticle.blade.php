@@ -228,16 +228,21 @@
             function getCategoryList(){
                 $.ajax({
                     type:'GET',
-                    url:'/backend/article/categorylist',
-                    data:{'cacheKey':$cacheKey,'token':$token},
+                    url:'/backend/article/category/all',
+                    data:{},
                     dataType:'json',
                     success:function (data) {
-                        var list = data.content.list;
-                        list.forEach(function ($item) {
-                            $("#category_id").append(
-                                "<option value='"+$item.id+"'>"+$item.name+"</option>"
-                            )
-                        });
+                        if (data.code == 0) {
+                            var list = data.content;
+                            list.forEach(function ($item) {
+                                $("#category_id").append(
+                                    "<option value='"+$item.id+"'>"+$item.name+"</option>"
+                                )
+                            });
+                        } else {
+                            $("#search_alert").removeClass("hidden");
+                            $("#search_alert span").html("<strong>出错喽~！</strong>");
+                        }
                     },
                     error:function (e) {
                         $("#search_alert").removeClass("hidden");
@@ -257,19 +262,24 @@
                 $.ajax({
                     type:'GET',
                     url:'/backend/article/detail',
-                    data:{'article_id':id,'cacheKey':$cacheKey,'token':$token},
+                    data:{'article_id':id},
                     dataType:'json',
                     success:function (data) {
-                        $("#article_name").val(data.content.article_name);
-                        $("#article_author").val(data.content.article_author);
-                        $("#keywords1").val(data.content.keywords1);
-                        $("#keywords2").val(data.content.keywords2);
-                        $("#keywords3").val(data.content.keywords3);
-                        $("#article_img").val(data.content.article_img);
-                        $("#upload_img").attr('src','/uploads'+data.content.article_img);
-                        $("#article_describe").val(data.content.article_describe);
-                        $("#category_id").val(data.content.category_id);
-                        UE.getEditor('editor').setContent(''+data.content.article_content+'', false);
+                        if (data.code == 0) {
+                            $("#article_name").val(data.content.article_name);
+                            $("#article_author").val(data.content.article_author);
+                            data.content.keywords_one ? $("#keywords1").val(data.content.keywords_one) : $("#keywords1").val('');
+                            data.content.keywords_two ? $("#keywords2").val(data.content.keywords_two) : $("#keywords2").val('');
+                            data.content.keywords_three ? $("#keywords3").val(data.content.keywords_three) : $("#keywords3").val('');
+                            $("#article_img").val(data.content.article_img);
+                            $("#upload_img").attr('src','/uploads'+data.content.article_img);
+                            $("#article_describe").val(data.content.article_describe);
+                            $("#category_id").val(data.content.category_id);
+                            UE.getEditor('editor').setContent(''+data.content.article_content+'', false);
+                        } else {
+                            $("#search_alert").removeClass("hidden");
+                            $("#search_alert span").html("<strong>出错喽~！</strong>");
+                        }
                     },
                     error:function (e) {
                         $("#search_alert").removeClass("hidden");
@@ -321,15 +331,17 @@
                             'article_describe' : article_describe,
                             'category_id' : category_id,
                             'article_content' : content,
-                            'cacheKey':$cacheKey,
-                            'token':$token
                         },
                         dataType:'json',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success:function (data) {
-                            alert('文章修改成功');
+                            if (data.code == 0) {
+                                alert('文章修改成功');
+                            } else {
+                                alert('出错喽~！'+data.message);
+                            }
                         },
                         error:function (e) {
                             $("#search_alert").removeClass("hidden");
@@ -352,8 +364,6 @@
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'cacheKey':$cacheKey,
-                        'token':$token
                     },
                     type: 'POST',
                     url:'/backend/article/upload_pic',

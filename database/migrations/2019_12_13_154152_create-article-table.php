@@ -24,7 +24,7 @@ class CreateArticleTable extends Migration
             $table->string('keywords_three',20)->default('')->comment('文章关键字3');
             $table->text('article_content')->comment('文章内容');
             $table->string('article_img',120)->default('/article_img/article_default_img.png')->comment('文章首图');
-            $table->integer('article_view')->unsigned()->comment('查看人数');
+            $table->integer('article_view')->unsigned()->default(0)->comment('查看人数');
             $table->tinyInteger('article_type')->default(1)->comment('文章的模式:1为公开，2为私有');
             $table->tinyInteger('article_support')->default(1)->comment('是否博主推荐:1为否，2为是');
             $table->timestamps();

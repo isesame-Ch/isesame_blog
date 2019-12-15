@@ -178,13 +178,10 @@
         $(function () {
             //获取列表
             function getList(page=1,page_size=10){
-                if (!$cacheKey || $cacheKey == null || !$token || $token == null){
-                    window.location = '/backend/login';
-                }
                 var data = $("#search_form").serialize();
                 var _page = page;
                 var _page_size = page_size;
-                data = data+"&page="+_page+"&page_size="+_page_size+"&cacheKey="+$cacheKey+"&token="+$token;
+                data = data+"&page="+_page+"&page_size="+_page_size;
                 $.ajax({
                     type:'get',
                     url:'/backend/admin/getlist',
@@ -302,7 +299,6 @@
 
             $("#update_btn").on("click",function () {
                 var data = $("#edit_form").serialize();
-                data = data+"&cacheKey="+$cacheKey+"&token="+$token;
                 $.ajax({
                     url:'/backend/admin/edit',
                     type:'post',
@@ -333,7 +329,7 @@
                 $.ajax({
                     url:'/backend/admin/delete',
                     type:'post',
-                    data:{'admin_id':id,'cacheKey':$cacheKey,'token':$token},
+                    data:{'admin_id':id},
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -356,12 +352,11 @@
 
             //添加管理员
             $("#add_admin_btn").on("click",function () {
-                $data = $('#add_admin_form').serialize();
-                $data = $data+"&cacheKey="+$cacheKey+"&token="+$token;
+                let data = $('#add_admin_form').serialize();
                 $.ajax({
                     type:"POST",
                     url:"/backend/admin/add",
-                    data:$data,
+                    data:data,
                     dataType:"json",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

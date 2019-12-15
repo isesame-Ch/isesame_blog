@@ -19,6 +19,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        '/editormd/image/upload',    // markdown编辑器上传图片
     ];
 }

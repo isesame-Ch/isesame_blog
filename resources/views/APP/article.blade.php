@@ -105,28 +105,32 @@
                     data:{'article_id':id},
                     dataType:'json',
                     success:function (data) {
-                        $('#article_title').html(data.content.article_name);
-                        $('#article_content').html(data.content.article_content);
-                        $('#article_author').html(data.content.article_author);
-                        $('#article_time').text(data.content.created_at);
-                        if (data.content.keywords_one) {
-                            $('#keywords1').text(data.content.keywords_one);
+                        if (data.code == 0) {
+                            $('#article_title').html(data.content.article_name);
+                            $('#article_content').html(data.content.article_content);
+                            $('#article_author').html(data.content.article_author);
+                            $('#article_time').text(data.content.created_at);
+                            if (data.content.keywords_one) {
+                                $('#keywords1').text(data.content.keywords_one);
+                            } else {
+                                $('#keywords1').remove();
+                            }
+                            if (data.content.keywords_two) {
+                                $('#keywords2').text(data.content.keywords_two);
+                            } else {
+                                $('#keywords2').remove();
+                            }
+                            if (data.content.keywords_three) {
+                                $('#keywords3').text(data.content.keywords_three);
+                            } else {
+                                $('#keywords3').remove();
+                            }
                         } else {
-                            $('#keywords1').remove();
-                        }
-                        if (data.content.keywords_two) {
-                            $('#keywords2').text(data.content.keywords_two);
-                        } else {
-                            $('#keywords2').remove();
-                        }
-                        if (data.content.keywords_three) {
-                            $('#keywords3').text(data.content.keywords_three);
-                        } else {
-                            $('#keywords3').remove();
+                            alert('555~出错喽~！')
                         }
                     },
                     error:function (e) {
-                        console.log('555~出错喽~！')
+                        alert('555~出错喽~！')
                     }
                 })
             };

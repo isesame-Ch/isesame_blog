@@ -80,13 +80,13 @@
                             <a href="javascript:void(0);"><i class="fa fa-table"></i><span>文章管理</span><i class="arrow fa fa-angle-right pull-right"></i></a>
                             <ul>
                                 <li>
-                                    <a href="/backend/article/release">文章发布</a>
+                                    <a href="/backend/article/show">文章发布</a>
                                 </li>
                                 <li>
-                                    <a href="/backend/article/list">文章列表</a>
+                                    <a href="/backend/article/list/show">文章列表</a>
                                 </li>
                                 <li>
-                                    <a href="/backend/article/category">分类管理</a>
+                                    <a href="/backend/article/category/show">分类管理</a>
                                 </li>
                             </ul>
                         </li>
