@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class AdminAuthMiddleware
 {
     protected $pathArr = [
-        'backend//index',
+        'backend/index',
         'backend/logout',
         'backend/user/show',
         'backend/admin/list',

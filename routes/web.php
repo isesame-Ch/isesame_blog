@@ -117,12 +117,10 @@ Route::group(['namespace'=>'Backend', 'prefix'=>'backend', 'middleware' => ['adm
     Route::get('/article/category/all', 'ArticleController@getCategoryList');
     // 后端--文章分类--列表
     Route::get('/article/category/list', 'ArticleController@getCategoryList');
-    // 后端--文章分类--编辑
-    Route::post('/article/category/edit', 'ArticleController@editCategory');
-    // 后端--文章分类--删除
-    Route::post('/article/category/delete', 'ArticleController@deleteCategory');
     // 后端--文章分类--添加
     Route::post('/article/category/add', 'ArticleController@addCategory');
+    // 后端--文章分类--编辑
+    Route::post('/article/category/edit', 'ArticleController@editCategory');
 
 });
 
