@@ -12,7 +12,7 @@ class ArticleCategoryModel extends BaseModel
      * 不可以被批量赋值的属性。
      * @var array
      */
-    #protected $guarded = [''];
+    protected $guarded = [''];
 
     /**
      * 可以被批量赋值的属性。

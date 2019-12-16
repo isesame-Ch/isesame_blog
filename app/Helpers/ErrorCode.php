@@ -34,8 +34,10 @@ class ErrorCode
     const ADMIN_ERROR               = 10010;    // 该用户不是管理员
 
     const ARTICLE_ERROR             = 10020;    // 文章不存在
-    const ARTICLE_RELEASE_ERROR     = 10021;    // 文章不存在
-    const ARTICLE_PICTURE_ERROR     = 10022;    // 文章不存在
+    const ARTICLE_RELEASE_ERROR     = 10021;    // 文章发布失败
+    const ARTICLE_PICTURE_ERROR     = 10022;    // 文章上传图片失败
+    const ARTICLE_CATEGORY_ERROR     = 10023;    // 文章分类不存在
+    const ARTICLE_PARENT_CATEGORY_ERROR     = 10024;    // 父级分类不存在
 
     const FILE_EXTENSION_ERROR      = 10030;    // 文件格式错误
 

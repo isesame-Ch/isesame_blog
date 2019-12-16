@@ -70,9 +70,9 @@ class Handler extends ExceptionHandler
             ])->setStatusCode(200);
         } else if ($e instanceof ValidationException) {
             return response([
-                'code' => $e->getResponse()->getStatusCode() ,//getStatusCode()
+                'code' => 422 ,//getStatusCode()
                 'message' => '数据校验失败',
-                'content' => json_decode($e->getResponse()->getContent(), true),
+                'content' => null,
                 'contentEncrypt' => ''
             ])->setStatusCode(200);
         } else {

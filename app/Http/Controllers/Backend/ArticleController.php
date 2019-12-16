@@ -13,6 +13,7 @@ use App\Helpers\ErrorCode;
 use App\Http\Controllers\Controller;
 use App\Http\Services\ArticleCategoryService;
 use App\Http\Services\ArticleService;
+use App\Models\ArticleCategoryModel;
 use App\Models\ArticleModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -307,6 +308,72 @@ class ArticleController extends Controller
             'message' => '成功啦',
             'url' => env('APP_URL').$file_path.'/'.$filename
         ];
+    }
+
+    /**
+     * 添加文章分类
+     * @param Request $request
+     * @return ArticleController
+     * @throws \Exception
+     */
+    public function addCategory(Request $request)
+    {
+        $rules = [
+            'parent_id' => 'required|integer',
+            'name' => 'required|string|max:20'
+        ];
+        $data = $this->filterParams($request, $rules);
+
+        if ($data['parent_id'] != 0) {
+            $parentCategory = ArticleCategoryModel::query()->where('id', $data['parent_id'])->first();
+            if (empty($parentCategory)) {
+                throw new \Exception('该父级分类不存在', ErrorCode::ARTICLE_PARENT_CATEGORY_ERROR);
+            }
+        }
+        $result = ArticleCategoryModel::query()->create([
+            'parent_id' => $data['parent_id'],
+            'name' => $data['name'],
+            'created_at' => time()
+        ]);
+        $this->setKeyContent($result);
+        return $this->responseArray();
+    }
+
+    /**
+     * 编辑文章分类
+     * @param Request $request
+     * @return ArticleController
+     * @throws \Exception
+     */
+    public function editCategory(Request $request)
+    {
+        $rules = [
+            'category_id' => 'required|integer',
+            'parent_id' => 'required|integer',
+            'name' => 'required|string|max:20'
+        ];
+        $data = $this->filterParams($request, $rules);
+
+        if ($data['category_id'] == $data['parent_id']) {
+            throw new \Exception('不能选择自己作为父级类型',ErrorCode::ARTICLE_CATEGORY_ERROR);
+        }
+        $category = ArticleCategoryModel::query()->where('id', $data['category_id'])->first();
+        if (empty($category)) {
+            throw new \Exception('该文章分类不存在', ErrorCode::ARTICLE_CATEGORY_ERROR);
+        }
+        if ($data['parent_id'] != 0) {
+            $parentCategory = ArticleCategoryModel::query()->where('id', $data['parent_id'])->first();
+            if (empty($parentCategory)) {
+                throw new \Exception('该父级分类不存在', ErrorCode::ARTICLE_PARENT_CATEGORY_ERROR);
+            }
+        }
+        $category->parent_id = $data['parent_id'];
+        $category->name = $data['name'];
+        $category->updated_at = time();
+        $result = $category->save();
+
+        $this->setKeyContent($result);
+        return $this->responseArray();
     }
 
 }

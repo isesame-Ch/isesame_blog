@@ -59,8 +59,8 @@
                                         <div class="form-group">
                                             <label for="parent_id" class="col-sm-2 control-label">父级分类:</label>
                                             <div class="col-sm-10">
-                                                <select name="parent_id" id="new_parent" class="form-control category_select category_select">
-                                                    <option value="0">--</option>
+                                                <select name="parent_id" id="new_parent" class="form-control category_select" >
+                                                    <option value="0" selected = "selected" >--</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -102,26 +102,28 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label for="parent_id" class="col-sm-2 control-label">分类:</label>
+                                            <div class="col-sm-10">
+                                                <select name="parent_id" id="edit_parent_id" class="form-control category_select">
+                                                    <option value="0" selected = "selected" >--</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">分类名</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" name="name" id="edit_category_name" placeholder="分类名称" >
                                             </div>
                                         </div>
                                         {{--<div class="form-group">--}}
-                                        {{--<label for="category_id" class="col-sm-2 control-label">分类:</label>--}}
-                                        {{--<div class="col-sm-10">--}}
-                                        {{--<select name="category_id" id="edit_category" class="form-control category_select"></select>--}}
+                                            {{--<label class="col-sm-2 control-label">状态</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<label class="radio-inline">--}}
+                                                    {{--<input class="icheck" type="radio" value="1" name="state" id="state1">禁用</label>--}}
+                                                {{--<label class="radio-inline">--}}
+                                                    {{--<input class="icheck" type="radio" value="2" name="state" id="state2">启用</label>--}}
+                                            {{--</div>--}}
                                         {{--</div>--}}
-                                        {{--</div>--}}
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">状态</label>
-                                            <div class="col-sm-10">
-                                                <label class="radio-inline">
-                                                    <input class="icheck" type="radio" value="1" name="state" id="state1">禁用</label>
-                                                <label class="radio-inline">
-                                                    <input class="icheck" type="radio" value="2" name="state" id="state2">启用</label>
-                                            </div>
-                                        </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
@@ -167,8 +169,8 @@
     <!--END transform timestamp-->
     <script>
         $(function () {
-            var page = 1;
-            var page_size = 10;
+            let page = 1;
+            let page_size = 10;
 
             //获取分类列表
             function getCategoryList(){
@@ -178,18 +180,22 @@
                     data:{},
                     dataType:'json',
                     success:function (data) {
-                        var list = data.content;
-                        list.forEach(function ($item) {
-                            $(".category_select").append(
-                                "<option value='"+$item.id+"'>"+$item.name+"</option>"
-                            )
-                        });
+                        if (data.code == 0) {
+                            let list = data.content;
+                            list.forEach(function ($item) {
+                                $(".category_select").append(
+                                    "<option value='"+$item.id+"'>"+$item.name+"</option>"
+                                )
+                            });
+                        } else {
+                            $("#search_alert").removeClass("hidden");
+                            $("#search_alert span").html("<strong>出错喽~！"+data.message+"</strong>");
+                        }
                     },
                     error:function (e) {
                         $("#search_alert").removeClass("hidden");
                         $("#search_alert span").html("<strong>出错喽~！</strong>");
-                        if (typeof e.responseJSON.errors !== 'undefined')
-                        {
+                        if (typeof e.responseJSON.errors !== 'undefined') {
                             for($item in e.responseJSON.errors) {
                                 $("#search_alert span").html($item + "格式不符合要求");
                             }
@@ -198,11 +204,11 @@
                 })
             };
 
-            //获取文章列表
+            //获取文章分类列表
             function getList(page=1,page_size=10){
-                var data = $("#search_form").serialize();
-                var _page = page;
-                var _page_size = page_size;
+                let data = $("#search_form").serialize();
+                let _page = page;
+                let _page_size = page_size;
                 data = data+"&page="+_page+"&page_size="+_page_size;
 
                 $.ajax({
@@ -247,19 +253,21 @@
                                     "<td class=\"created_time\">"+$item.created_at+"</td>" +
                                     "<td>" +
                                     "<button class=\"btn btn-primary btn-sm edit_btn\" style=\"margin-left: 5px\" data-toggle=\"modal\" data-target=\"#updateModal\">编辑</button>" +
-                                    "<button class=\"btn btn-danger btn-sm delete_btn\" style=\"margin-left: 5px\">删除</button>" +
+                                    // "<button class=\"btn btn-danger btn-sm delete_btn\" style=\"margin-left: 5px\">删除</button>" +
                                     "</td>" +
                                     "</tr>"
                                 );
                                 $i++;
                             })
+                        } else {
+                            $("#search_alert").removeClass("hidden");
+                            $("#search_alert span").html("<strong>出错喽~！"+data.message+"</strong>");
                         }
                     },
                     error:function (e) {
                         $("#search_alert").removeClass("hidden");
                         $("#search_alert span").html("<strong>出错喽~！</strong>");
-                        if (typeof e.responseJSON.errors !== 'undefined')
-                        {
+                        if (typeof e.responseJSON.errors !== 'undefined') {
                             for($item in e.responseJSON.errors) {
                                 $("#search_alert span").html($item + "格式不符合要求");
                             }
@@ -281,8 +289,8 @@
 
             //分页请求
             $("#category_list").on('click','.pagination_a',function(){
-                var _this = $(this);
-                var _page = _this[0].innerText;
+                let _this = $(this);
+                let _page = _this[0].innerText;
                 if (_page === '«') {
                     _page = 1;
                 }else if (_page === '»') {
@@ -294,19 +302,21 @@
 
             //提交编辑
             $("#category_list").on("click",'.edit_btn',function () {
-                var td = $(this).parent().parent().children('td');
-                var id = td[1].innerText;
-                var category_name = td[3].innerText;
-                var state = td[4].innerText;
-                state == '启用' ? state = 2 : state = 1;
+                let td = $(this).parent().parent().children('td');
+                let id = td[1].innerText;
+                let parent_id = td[2].innerText;
+                let category_name = td[3].innerText;
+                // let state = td[4].innerText;
+                // state == '启用' ? state = 2 : state = 1;
 
                 $("#edit_id").val(id);
+                $("#edit_parent_id").val(parent_id);
                 $("#edit_category_name").val(category_name);
                 $("#state"+state).attr('checked',true);
             });
 
             $("#update_btn").on("click",function () {
-                var data = $("#edit_form").serialize();
+                let data = $("#edit_form").serialize();
 
                 $.ajax({
                     url:'/backend/article/category/edit',
@@ -317,10 +327,11 @@
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             alert('编辑成功');
                             window.location.reload();
+                        } else {
+                            alert('编辑失败：'+data.message);
                         }
                     },
                     error:function (e) {
@@ -336,10 +347,10 @@
                 })
             });
 
-            //删除文章
+            //删除文章分类
             $("#category_list").on("click",'.delete_btn',function () {
-                var td = $(this).parent().parent().children('td');
-                var id = td[1].innerText;
+                let td = $(this).parent().parent().children('td');
+                let id = td[1].innerText;
                 $.ajax({
                     url:'/backend/article/category/delete',
                     type:'post',
@@ -370,7 +381,7 @@
 
             //添加分类
             $("#add_btn").on('click',function () {
-                var data = $("#add_form").serialize();
+                let data = $("#add_form").serialize();
 
                 $.ajax({
                     type:'POST',
@@ -381,8 +392,12 @@
                         'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
-                        alert('添加成功');
-                        window.location.reload();
+                        if (data.code == 0) {
+                            alert('添加成功');
+                            window.location.reload();
+                        } else {
+                            alert('出错喽~！' + data.message);
+                        }
                     },
                     error:function (e) {
                         $("#search_alert").removeClass("hidden");
