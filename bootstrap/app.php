@@ -11,7 +11,6 @@
 |
 */
 
-require_once('../app/Helpers/ShareHerlper.php');
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
