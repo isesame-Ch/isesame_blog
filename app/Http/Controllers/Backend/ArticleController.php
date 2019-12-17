@@ -209,7 +209,9 @@ class ArticleController extends Controller
         $article->keywords_two = $data['keywords_two'];
         $article->keywords_three = $data['keywords_three'];
         $article->article_content = $data['article_content'];
-        $article->article_img = $data['article_img'];
+        if (Arr::has($data,'article_img')) {
+            $article->article_img = $data['article_img'];
+        }
         $article->created_at = time();
         $result = $article->save();
 //        if (!$result) {
