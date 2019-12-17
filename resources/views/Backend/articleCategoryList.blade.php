@@ -67,7 +67,7 @@
                                         <div class="form-group">
                                             <label for="name" class="col-sm-2 control-label">分类名</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="name" id="new_name" placeholder="账号">
+                                                <input type="text" class="form-control" name="name" id="new_name" placeholder="分类名">
                                             </div>
                                         </div>
 
