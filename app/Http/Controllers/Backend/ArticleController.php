@@ -241,8 +241,12 @@ class ArticleController extends Controller
         }
         $currentDate = Date('Ym',time());
         $file_path = 'uploads/article_img/'.$currentDate;
+        $fullPath = public_path($file_path);
+        if (is_dir($fullPath)) {
+            mkdir($fullPath);
+        }
         $filename = md5('upload'.rand(1000,9999).microtime()). '.' .$extension;
-        $file->move(public_path($file_path),$filename);
+        $file->move($fullPath,$filename);
 
         $return = '/article_img/'.$currentDate.'/'.$filename;
         $this->setKeyContent($return);
