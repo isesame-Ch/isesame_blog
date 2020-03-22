@@ -14,9 +14,10 @@ class CreateAdminTable extends Migration
     public function up()
     {
         Schema::create('admin', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->integerIncrements('id');
             $table->integer('user_id')->unsigned()->comment('用户主表ID');
-            $table->tinyInteger('identity')->default(1)->comment('管理员权限,1:普通用户，2：管理员，3：超级管理员');
+            $table->tinyInteger('identity')->default(1)->comment('管理员权限,1:管理员，2：超级管理员');
             $table->tinyInteger('status')->default(1)->comment('状态，1：正常，2：禁用');
             $table->timestamps();
             $table->softDeletes();

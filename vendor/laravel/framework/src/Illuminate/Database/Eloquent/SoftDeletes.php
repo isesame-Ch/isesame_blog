@@ -81,14 +81,14 @@ trait SoftDeletes
 
         $time = $this->freshTimestamp();
 
-        $columns = [$this->getDeletedAtColumn() => $time];
+        $columns = [$this->getDeletedAtColumn() => $this->fromDateTime($time)];
 
         $this->{$this->getDeletedAtColumn()} = $time;
 
         if ($this->timestamps && ! is_null($this->getUpdatedAtColumn())) {
             $this->{$this->getUpdatedAtColumn()} = $time;
 
-//            $columns[$this->getUpdatedAtColumn()] = $this->fromDateTime($time);
+            $columns[$this->getUpdatedAtColumn()] = $this->fromDateTime($time);
         }
 
         $query->update($columns);

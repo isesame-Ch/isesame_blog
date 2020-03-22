@@ -14,6 +14,7 @@ class CreateArticleCategoryTable extends Migration
     public function up()
     {
         Schema::create('article_category', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->integer('parent_id')->unsigned()->default(0)->comment('父级类目id');
             $table->string('name',255)->default('')->comment('分类名');

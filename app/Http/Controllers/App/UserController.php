@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\App;
 
+use App\Exceptions\DataBaseException;
 use App\Helpers\ErrorCode;
 use App\Http\Services\UserService;
+use App\Models\UserAuthModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -35,8 +38,8 @@ class UserController extends Controller
      * 注册用户
      * @param Request $request
      * @return UserController
+     * @throws DataBaseException
      * @throws \Illuminate\Validation\ValidationException
-     * @throws \Exception
      */
     public function create(Request $request)
     {
@@ -45,23 +48,53 @@ class UserController extends Controller
             'password' => 'bail||required||max:20|min:6',
             'nickname' => 'bail|required|max:10',
             'email' => 'bail|required|email',
+            'mobile' => 'bail|required',
             'head_pic' => 'nullable'
         ];
         $data = $this->filterParams($request, $rules);
 
-        if (UserModel::isUserNameExists($data['username'], $data['nickname'])) {
+        if (UserAuthModel::isUserNameExists($data['username'], 1)) {
+            throw new \Exception('该用户名或昵称已存在', ErrorCode::USER_ERROR_EXISTS);
+        };
+        if (UserModel::isNickNameExists($data['nickname'])) {
             throw new \Exception('该用户名或昵称已存在', ErrorCode::USER_ERROR_EXISTS);
         };
         if (UserModel::isEmailBinded($data['email'])) {
             throw new \Exception('该邮箱已绑定', ErrorCode::USER_EMAIL_BINDED);
         };
-        $user = new UserModel();
-        $user->username = $data['username'];
-        $user->password = md5($data['password']);
-        $user->nickname = $data['nickname'];
-        $user->email = $data['email'];
-        $user->created_at = time();
-        $result = $user->save();
+
+        DB::beginTransaction();
+        try {
+            $user = new UserModel();
+            $user->nickname = $data['nickname'];
+            $user->email = $data['email'];
+            $user->mobile = $data['mobile'];
+            $user->created_at = time();
+            $userResult = $user->save();
+
+            $userAuth = new UserAuthModel();
+            $userAuth->user_id = $user->id;
+            $userAuth->identity_type = 1;
+            $userAuth->identifier = $data['username'];
+            $userAuth->credential = md5($data['password']);
+            $userAuth->created_at = time();
+            $userAuthResult = $userAuth->save();
+        } catch (\Exception $e) {
+            DB::rollback();
+            switch ($e->getCode()) {
+                case 'HY000':
+                    throw new DataBaseException($e->getMessage());
+                    break;
+                default :
+                    throw new \Exception($e->getMessage(), $e->getCode());
+            }
+        }
+        if ($userResult && $userAuthResult) {
+            DB::commit();
+        } else {
+            DB::rollback();
+        }
+
         $this->setKeyContent(['url'=>'/login']);
         return $this->responseArray();
     }
@@ -81,21 +114,7 @@ class UserController extends Controller
         ];
         $data = $this->filterParams($request, $rules);
 
-        $user = $this->userService->getByUserName($data['username']);
-        if (empty($user)) {
-            throw new \Exception('没有该账号，请注册后登陆',ErrorCode::USER_ERROR);
-        }
-        if ($user->password != $data['password']) {
-            throw new \Exception('用户账号密码不匹配，请重新输入',ErrorCode::USER_PASSWORD_ERROR);
-        }
-        Auth::login($user);
-        $returnArr['user']['nickname'] = $user->nickname;
-        $returnArr['user']['head_pic'] = $user->head_pic;
-        $returnArr['url'] = '/index';
-
-        // todo 用户访问统计
-
-        //end 用户访问统计
+        $returnArr = $this->userService->login($data, 1);
         $this->setKeyContent($returnArr);
         return $this->responseArray();
     }

@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 .env
+.env_pro
 .env.backup
 .phpunit.result.cache
 Homestead.json

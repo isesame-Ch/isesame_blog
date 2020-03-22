@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Helpers\ErrorCode;
 use App\Http\Services\UserService;
+use App\Models\UserAuthModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ class UserController extends Controller
         $data = $this->filterParams($request, $rules);
         $where = [];
         if (Arr::has($data, 'username')) {
-            $where[] = ['username', 'like', '%'.$data['username'].'%'];
+            $where[] = ['identifier', 'like', '%'.$data['username'].'%'];
         }
         if (Arr::has($data, 'nickname')) {
             $where[] = ['nickname', 'like', '%'.$data['nickname'].'%'];
@@ -49,7 +50,7 @@ class UserController extends Controller
         }
         $users = $this->obj2Array(
             UserModel::getList(
-                [],
+                $where,
                 $request->input('page_size',10)
             )
         );
@@ -57,6 +58,18 @@ class UserController extends Controller
         foreach ($users['data'] as &$item) {
             $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
             $item['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
+            $item['username'] = $item['user_auth'][0]['identifier'];
+            switch ($item['user_auth'][0]['identity_type']) {
+                case 1:
+                    $item['identity_type'] = '自建账户';
+                    break;
+                case 2:
+                    $item['identity_type'] = 'QQ登录';
+                    break;
+                default :
+                    $item['identity_type'] = '还未设置';
+                    break;
+            }
         }
 
         $this->setKeyContent($this->listData($users));
@@ -76,26 +89,50 @@ class UserController extends Controller
             'password' => 'bail||required||max:20|min:6',
             'nickname' => 'bail|required|max:10',
             'email' => 'bail|required|email',
+            'mobile' => 'bail|required',
             'head_pic' => 'nullable'
         ];
-        $data = $this->filterParams($request, $rules);
-
-        if (UserModel::isUserNameExists($data['username'], $data['nickname'])) {
+        $data = $this->filterParams($request, $rules); if (UserAuthModel::isUserNameExists($data['username'],1)) {
+        throw new \Exception('该用户名或昵称已存在', ErrorCode::USER_ERROR_EXISTS);
+    };
+        if (UserModel::isNickNameExists($data['nickname'])) {
             throw new \Exception('该用户名或昵称已存在', ErrorCode::USER_ERROR_EXISTS);
         };
         if (UserModel::isEmailBinded($data['email'])) {
             throw new \Exception('该邮箱已绑定', ErrorCode::USER_EMAIL_BINDED);
         };
-        $user = new UserModel();
-        $user->username = $data['username'];
-        $user->password = md5($data['password']);
-        $user->nickname = $data['nickname'];
-        $user->email = $data['email'];
-        if (Arr::has($data, 'head_pic')) {
-            $user->head_pic = $data['head_pic'];
+
+        DB::beginTransaction();
+        try {
+            $user = new UserModel();
+            $user->nickname = $data['nickname'];
+            $user->email = $data['email'];
+            $user->mobile = $data['mobile'];
+            $user->created_at = time();
+            $userResult = $user->save();
+
+            $userAuth = new UserAuthModel();
+            $userAuth->user_id = $user->id;
+            $userAuth->identity_type = 1;
+            $userAuth->identifier = $data['username'];
+            $userAuth->credential = md5($data['password']);
+            $userAuth->created_at = time();
+            $userAuthResult = $userAuth->save();
+        } catch (\Exception $e) {
+            DB::rollback();
+            switch ($e->getCode()) {
+                case 'HY000':
+                    throw new DataBaseException($e->getMessage());
+                    break;
+                default :
+                    throw new \Exception($e->getMessage(), $e->getCode());
+            }
         }
-        $user->created_at = time();
-        $result = $user->save();
+        if ($userResult && $userAuthResult) {
+            DB::commit();
+        } else {
+            DB::rollback();
+        }
         $this->setKeyContent(true);
         return $this->responseArray();
     }

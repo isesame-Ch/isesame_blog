@@ -79,6 +79,12 @@
                                                 <input type="email" class="form-control" name="email" id="inputEmail3" placeholder="Email">
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="mobile" class="col-sm-2 control-label">手机</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" name="mobile" id="new_mobile" placeholder="手机号">
+                                            </div>
+                                        </div>
                                         <div class="form-group hidden">
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" name="head_pic" id="new_head_pic" placeholder="图片">
@@ -120,6 +126,7 @@
                                     <th>账号</th>
                                     <th>昵称</th>
                                     <th>邮箱</th>
+                                    <th>账号类型</th>
                                     <th>创建时间</th>
                                     <th>操作</th>
                                 </tr>
@@ -174,6 +181,12 @@
                                             <label for="email" class="col-sm-2 control-label">Email</label>
                                             <div class="col-sm-10">
                                                 <input type="email" class="form-control" name="email" id="edit_email" placeholder="Email">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mobile" class="col-sm-2 control-label">手机</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" name="mobile" id="edit_mobile" placeholder="手机号">
                                             </div>
                                         </div>
                                     </form>
@@ -247,6 +260,7 @@
                                     "<td class=\"username\">"+$item.username+"</td>" +
                                     "<td class=\"nickname\">"+$item.nickname+"</td>" +
                                     "<td class=\"email\">"+$item.email+"</td>" +
+                                    "<td class=\"identity_type\">"+$item.identity_type+"</td>" +
                                     "<td class=\"created_at\">"+$item.created_at+"</td>" +
                                     "<td>" +
                                     "<button class=\"btn btn-primary btn-sm edit_btn\" data-toggle=\"modal\" data-target=\"#updateModal\" style=\"margin-left: 5px\">编辑</button>" +

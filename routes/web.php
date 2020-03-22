@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/','App\UserController@store');
+
+### END ###
 
 Route::group(['namespace' => 'App'], function () {
     // 前端--用户注册页
@@ -25,7 +25,7 @@ Route::group(['namespace' => 'App'], function () {
     Route::get('/login','UserController@store');
     // 前端--用户登陆
     Route::post('/login',['uses'=>'UserController@login']);
-    // 后端--用户登出
+    // 前端--用户登出
     Route::post('/logout',['uses' => 'UserController@logout']);
 
     // 前端--首页列表页
@@ -41,6 +41,12 @@ Route::group(['namespace' => 'App'], function () {
 
     // 前端--小游戏
     Route::get('/game',function (){return view('APP.game');});
+
+
+    ### 第三方登录 begin ###
+    Route::get('/oauth/qq/index','OauthController@actionIndex');
+
+    Route::get('/oauth/qq/callback','OauthController@QQCallback');
 });
 
 

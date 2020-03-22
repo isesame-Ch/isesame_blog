@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Backend;
 use App\Helpers\ErrorCode;
 use App\Http\Services\AdminService;
 use App\Http\Services\UserService;
+use App\Models\AdminModel;
 use App\Models\UserModel;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -48,29 +50,12 @@ class AdminController extends Controller
     public function login(Request $request)
     {
         $rules = [
-            'username' => 'bail||required||max:20|min:6',
-            'password' => 'bail||required||max:50|min:6',
+            'username' => 'bail|required|max:20|min:6',
+            'password' => 'bail|required|max:50|min:6',
         ];
         $data = $this->filterParams($request,$rules);
 
-        $user = $this->userService->getByUserName($data['username']);
-        if (empty($user)) {
-            throw new \Exception('没有该账号，请注册后登陆',ErrorCode::USER_ERROR);
-        }
-        if ($user->password != $data['password']) {
-            throw new \Exception('用户账号密码不匹配，请重新输入',ErrorCode::USER_PASSWORD_ERROR);
-        }
-        $isAdmin = $this->obj2Array($user->admin()->first());
-        if (count($isAdmin) == 0) {
-            throw new \Exception('该账号不是管理员，请联系超级管理员',ErrorCode::ADMIN_ERROR);
-        }
-        Auth::guard('admin')->login($user);
-
-        $returnArr['admin_user'] = [
-            'nickname' => $user->nickname,
-            'head_pic' => $user->head_pic,
-            'identity' => $isAdmin['identity'],
-        ];
+        $returnArr = $this->userService->backendLogin($data);
         $this->setKeyContent($returnArr);
         return $this->responseArray();
     }
@@ -94,5 +79,50 @@ class AdminController extends Controller
     public function index()
     {
         return view('Backend.index');
+    }
+
+    public function getList(Request $request)
+    {
+        $rules = [
+            'username' => 'string|nullable',
+            'mobile' => 'string|nullable',
+        ];
+        $data = $this->filterParams($request,$rules);
+
+        $where = [];
+        if (Arr::has($data, 'username')) {
+            $where[] = ['user_auth.identifier', 'like', '%'.$data['username'].'%'];
+        }
+        $adminList = $this->obj2Array(
+            AdminModel::getList(
+                $where,
+                $request->input('page_size',10)
+            )
+        );
+
+        foreach ($adminList['data'] as &$item) {
+            $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
+            $item['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
+
+            $item['username'] = $item['identifier'];
+            unset($item['credential']);
+            $item['nickname'] = $item['user_info']['nickname'];
+            $item['email'] = $item['user_info']['email'];
+            unset($item['user_info']);
+
+            switch ($item['identity']) {
+                case 1:
+                    $item['identity'] = '管理员';
+                    break;
+                case 2:
+                    $item['identity'] = '超级管理员';
+                    break;
+                default :
+                    $item['identity'] = '未知';
+                    break;
+            }
+        }
+        $this->setKeyContent($this->listData($adminList));
+        return $this->responseArray();
     }
 }

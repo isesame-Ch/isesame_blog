@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 
-class UserModel extends Authenticatable
+class UserModel extends BaseModel
 {
     use SoftDeletes;
     protected $table = 'user';
@@ -31,12 +31,12 @@ class UserModel extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'nickname','email','updated_at'
+        'nickname','email','mobile','updated_at'
     ];
-       
-    protected $hidden = [ 
+
+    protected $hidden = [
         //remember_token 字段用于记住我的功能
-        'password', 'remember_token',
+        'remember_token',
     ];
 
     /**
@@ -49,14 +49,22 @@ class UserModel extends Authenticatable
     }
 
     /**
-     * 用户名是否存在
-     * @param $userName
-     * @param $nickName
-     * @return bool
+     * 账号
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public static function isUserNameExists($userName, $nickName)
+    public function userAuth()
     {
-        return self::query()->withTrashed()->where('username', $userName)->orWhere('nickname', $nickName)->exists();
+        return $this->hasMany(UserAuthModel::class,'user_id', 'id');
+    }
+
+    /**
+     * 昵称是否已存在
+     * @param $nickName
+     * @return mixed
+     */
+    public static function isNickNameExists($nickName)
+    {
+        return self::query()->withTrashed()->Where('nickname', $nickName)->exists();
     }
 
     /**
@@ -67,5 +75,41 @@ class UserModel extends Authenticatable
     public static function isEmailBinded($email)
     {
         return self::query()->where('email', $email)->exists();
+    }
+
+    public static function getList($where = [], $pageSize = false, $columns = ['*'], $or = false)
+    {
+        $query = self::query()
+            ->with(['userAuth'])
+            ->leftJoin('user_auth', 'user_auth.user_id', 'user.id')
+            ->select($columns)
+            ->where(function ($model) use ($where, $or) {
+                foreach ($where as $field => $value) {
+                    if ($value instanceof \Closure) {
+                        $model = (!$or)
+                            ? $model->where($value)
+                            : $model->orWhere($value);
+                    } elseif (is_array($value)) {
+                        if (count($value) === 3) {
+                            list($field, $operator, $search) = $value;
+                            $model = (!$or)
+                                ? $model->where($field, $operator, $search)
+                                : $model->orWhere($field, $operator, $search);
+                        } elseif (count($value) === 2) {
+                            list($field, $search) = $value;
+                            $model = (!$or)
+                                ? $model->where($field, '=', $search)
+                                : $model->orWhere($field, '=', $search);
+                        }
+                    } else {
+                        $model = (!$or)
+                            ? $model->where($field, '=', $value)
+                            : $model->orWhere($field, '=', $value);
+                    }
+
+                }
+            });
+
+        return $pageSize ? $query->paginate($pageSize) : $query->get();
     }
 }

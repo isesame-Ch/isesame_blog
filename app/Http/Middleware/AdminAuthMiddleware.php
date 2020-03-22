@@ -27,7 +27,7 @@ class AdminAuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guard('admin')->guest()) {
+        if (!Auth::guard('admin')->check()) {
             if ((in_array($request->path(), $this->pathArr) || strpos($request->path(),'/article/edit')) && $request->method() == 'GET') {
                 return redirect()->guest('/backend/login');
             } else {

@@ -215,7 +215,7 @@
             $.ajax({
                 type: "POST",
                 url: "/backend/login",
-                data:{'username':username,'password':md5(password)},
+                data:{'username':username,'password':password},
                 dataType:"json",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

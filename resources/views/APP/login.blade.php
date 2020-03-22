@@ -133,6 +133,9 @@
 								<div class="col-sm-4 col-sm-offset-4" style="margin-top: 20px;text-align: center">
 									<a href="/registered" target="_blank" id="registered">还没有账号，赶快注册吧~</a>
 								</div>
+								<div class="col-sm-4 col-sm-offset-4" style="margin-top: 20px;text-align: center">
+									<a target="_blank" onclick="toQQLogin()"><img width="30px" title="QQ登录" src="/img/login/Connect_logo_1.png" alt=""></a>
+								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-4 col-sm-4" style="color:#f44336;text-align: center; font-size: 16px" id="tip">
@@ -146,7 +149,14 @@
 			</div>
 		</div>
 
-
+		<script>
+            function toQQLogin()
+            {
+                //以下为按钮点击事件的逻辑。注意这里要重新打开窗口
+                //否则后面跳转到QQ登录，授权页面时会直接缩小当前浏览器的窗口，而不是打开新窗口
+                var A = window.open("oauth/qq/index","TencentLogin", "width=450,height=320,menubar=0,scrollbars=1,resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+            }
+		</script>
 		<script src="/js/jquery-3.3.1.min.js"></script>
 		<script src="/js/jquery.cookie.js"></script>
 		<script src="/js/bootstrap.min.js"></script>
@@ -189,7 +199,7 @@
                     $.ajax({
                         type: "POST",
                         url: "/login",
-                        data:{'username':username,'password':md5(password)},
+                        data:{'username':username,'password':password},
                         dataType:"json",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

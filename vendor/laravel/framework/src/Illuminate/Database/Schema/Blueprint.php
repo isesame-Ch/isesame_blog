@@ -1021,7 +1021,7 @@ class Blueprint
      */
     public function softDeletes($column = 'deleted_at', $precision = 0)
     {
-        return $this->unsignedInteger($column, $precision)->nullable();
+        return $this->timestamp($column, $precision)->nullable();
     }
 
     /**
@@ -1178,6 +1178,17 @@ class Blueprint
     public function multiPolygon($column)
     {
         return $this->addColumn('multipolygon', $column);
+    }
+
+    /**
+     * Create a new multipolygon column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ColumnDefinition
+     */
+    public function multiPolygonZ($column)
+    {
+        return $this->addColumn('multipolygonz', $column);
     }
 
     /**

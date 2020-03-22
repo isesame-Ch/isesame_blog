@@ -1,0 +1,20 @@
+{
+    "name": "isesame\/third_oauth_login",
+    "description": "simply build a third oauth login like QQ, github, wechat and so on",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "isesame",
+            "email": "isesame_live@163.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "^8.5",
+        "mockery/mockery": "^1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Isesame\\ThirdOauthLogin\\": "./src"
+        }
+    }
+}
