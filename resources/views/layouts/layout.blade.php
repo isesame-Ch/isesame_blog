@@ -299,6 +299,26 @@
 
                         <div class="nav navbar-nav navbar-right">
                             <li class="dropdown" id="nav_head_pic">
+                                @if (Auth::check())
+                                    <ul class="dropdown-menu">
+                                        <li id="drop-li">
+                                            <a href="#" class="drop-btn"> {{ Auth::user()->userInfo->nickname }}</a>
+                                        </li>
+                                        <li class="drop-li">
+                                            <a href="#" id="sign_out_btn" class="drop-btn">退出登陆</a>
+                                        </li>
+                                    </ul>
+                                    <a href="#" class="dropdown-toggle" id="dropdown_btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="padding: 5px 15px;">
+                                        @if (strpos(Auth::user()->userInfo->head_pic,'http') === false && strpos(Auth::user()->userInfo->head_pic,'https') === false)
+                                            <img src="/uploads{{ Auth::user()->userInfo->head_pic }}" alt="" style="width: 25px;height: 25px;border-radius: 50px">
+                                        @else
+                                            <img src="{{ Auth::user()->userInfo->head_pic }}" alt="" style="width: 25px;height: 25px;border-radius: 50px">
+                                        @endif
+                                        <span class="caret"></span>
+                                    </a>
+                                @else
+                                    <a href="/login" target="_blank" style="color: #fefefe;">登录</a>
+                                @endif
                             </li>
                         </div>
 
@@ -517,7 +537,17 @@
         @section('recommend_sidebar')
             <div class="sidebar col-lg-4" id="recommend_container" >
                 <h3>推荐文章</h3>
-                <ul class="recommend_ul" id="support_list"></ul>
+                <ul class="recommend_ul" id="support_list">
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                    <li style="width: 100%;height: 20px;background-color: #e7e7e7;margin-top: 15px;opacity:0.5"></li>
+                </ul>
             </div>
         @show
     </div>
@@ -528,7 +558,7 @@
                 {{--<p style="text-align: center;font-size: 60px">footer</p>--}}
                 <ul style="color: #fefefe;list-style: none;margin: 50px auto">
                     <li style="border-right: 1px #fefefe solid;display: inline-block;width: 33%;text-align: center">Copyright© 2019-2099</li>
-                    <li style="border-right: 1px #fefefe solid;display: inline-block;width: 33%;text-align: center"> Powered by XISHAN</li>
+                    <li style="border-right: 1px #fefefe solid;display: inline-block;width: 33%;text-align: center"> POWERD BY ISESAME</li>
                     <li style="display: inline-block;width: 33%;text-align: center"> 粤ICP备19153692号-1</li>
                 </ul>
             </div>
@@ -547,27 +577,6 @@
 <script src="/js/timestamp-transform.js"></script>
 <!--END transform timestamp-->
 <script>
-    //加载用户头像或登陆按钮
-    if ($.cookie('user')) {
-        $("#nav_head_pic").html(
-            '<a href="#" class="dropdown-toggle" id="dropdown_btn" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="padding: 5px 15px;">' +
-                '<img src="/uploads'+JSON.parse($.cookie('user')).head_pic+'" alt="" style="width: 25px;height: 25px;border-radius: 50px">' +
-                '<span class="caret"></span>' +
-            '</a>' +
-            '<ul class="dropdown-menu">' +
-                '<li id="drop-li">' +
-                    '<a href="#" class="drop-btn">'+JSON.parse($.cookie('user')).nickname+'</a>' +
-                '</li>' +
-                '<li class="drop-li">' +
-                    '<a href="#" id="sign_out_btn" class="drop-btn">退出登陆</a>' +
-                '</li>' +
-            '</ul>'
-        )
-    } else {
-        $("#nav_head_pic").html('<a href="/login" target="_blank" style="color: #fefefe;">登陆</a>');
-    }
-
-
     //退出登陆
     $("#sign_out_btn").on('click',function () {
         $.ajax({
@@ -579,12 +588,10 @@
             data:'',
             dataType:"json",
             success:function (data) {
-                if (data.code == 0)
-                {
-                    $.cookie('user',null, { expires: -1 });
+                if (data.code == 0) {
                     alert('拜拜~');
                     window.location = ''+data.content.url+'';
-                }else {
+                } else {
                     alert('退出失败：'+ data.message);
                 }
             },
@@ -606,6 +613,7 @@
             dataType:'json',
             success:function (data) {
                 if (data.code == 0) {
+                    $("#support_list").html("");
                     if (data.content.length > 0) {
                         $list = data.content;
                         $list.forEach(function ($item) {

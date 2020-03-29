@@ -10,6 +10,7 @@ use App\Models\UserModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -44,8 +45,8 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $rules =  [
-            'username' => 'bail||required||max:20|min:6',
-            'password' => 'bail||required||max:20|min:6',
+            'username' => 'bail|required|max:20|min:6',
+            'password' => 'bail|required|max:20|min:6',
             'nickname' => 'bail|required|max:10',
             'email' => 'bail|required|email',
             'mobile' => 'bail|required',
@@ -109,14 +110,18 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $rules = [
-            'username' => 'bail||required||max:20|min:6',
-            'password' => 'bail||required||max:50|min:6',
+            'username' => 'bail|required|max:20|min:6',
+            'password' => 'bail|required|max:50|min:6',
         ];
         $data = $this->filterParams($request, $rules);
 
         $returnArr = $this->userService->login($data, 1);
-        $this->setKeyContent($returnArr);
-        return $this->responseArray();
+
+        $userCookie = [
+            'nickname' => $returnArr['user']['nickname'],
+            'head_pic' => $returnArr['user']['head_pic']
+        ];
+        return redirect('/index');
     }
 
     /**

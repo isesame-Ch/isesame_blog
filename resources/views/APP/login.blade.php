@@ -104,14 +104,13 @@
 <body>
 		<div class="demo-1">
 			<div id="loading">
-				{{--<img class="loading_img" src="./img/loading.gif" alt="">--}}
-				{{--<span class="loading_letter">loading......</span>--}}
 			</div>
 			<div class="content">
 				<div id="large-header" class="large-header">
 					<div class="container center-vertical">
 						<span class="main-title" id="title">Welcome To isesame Pub</span>
-						<form class="form-horizontal col-sm-12" id="login_form" style="color:#ffffff" onsubmit="return false" action="#" method="post">
+						<form class="form-horizontal col-sm-12" id="login_form" style="color:#ffffff" onsubmit="return formValidate();" action="/login" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 							<div class="form-group">
 								<label for="username" class="col-sm-1 col-sm-offset-2 control-label">账号</label>
 								<div class="col-sm-6">
@@ -128,7 +127,7 @@
 							</div>
 							<div class="form-group">
 								<div class="col-sm-6 col-sm-offset-3">
-                                    <input type="button" id="login_submit" class="btn btn-info btn-lg btn-block" value="登录" >
+                                    <input type="submit" id="login_submit" class="btn btn-info btn-lg btn-block" value="登录" >
 								</div>
 								<div class="col-sm-4 col-sm-offset-4" style="margin-top: 20px;text-align: center">
 									<a href="/registered" target="_blank" id="registered">还没有账号，赶快注册吧~</a>
@@ -139,7 +138,6 @@
 							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-4 col-sm-4" style="color:#f44336;text-align: center; font-size: 16px" id="tip">
-
 								</div>
 							</div>
 						</form>
@@ -163,15 +161,14 @@
 		<script src="/js/validate-form.js"></script>
 		<script>
             $(function () {
-                $("#login_submit").on("click", login);
                 $(document).keyup(function(event){
                     if(event.keyCode ==13){
-                        login();
+                        $("#login_submit").submit();
                     }
                 });
             });
 
-            function login() {
+            function formValidate() {
                 var validateParams = {
                     onChange: function (isValid, $elem, msg) {
                         /*
@@ -182,64 +179,17 @@
                         //如下是验证通过以及未通过时的dom操作
                         if (isValid) {
                             $elem.next().removeClass("error");
+                            return true;
                         } else {
                             $elem.focus().next().text(msg).addClass("error");
+                            return false;
                         }
                     }
                 };
 
                 var isValid = $("#login_form").ValidateForm(validateParams);
-                if (isValid) {
-                    $("#loading").css("display","block");
-                    $("#loading").append('<img class="loading_img" src="/img/loading.gif" alt="">');
-                    $("#loading").append('<span class="loading_letter">loading......</span>');
-                    $("#tip").text(' ');
-                    var username = $('#username').val();
-                    var password = $('#password').val();
-                    $.ajax({
-                        type: "POST",
-                        url: "/login",
-                        data:{'username':username,'password':password},
-                        dataType:"json",
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(data) {
-                            if (data.code == 0) {
-                                setTimeout(function () {
-                                    $("#loading").empty();
-                                    $("#loading").css("display","none");
-                                    //设置三小时过期
-                                    var cookie_expires=new Date();
-                                    cookie_expires.setTime(cookie_expires.getTime()+3*3600*1000);
-                                    // $.cookie('cache_key',data.content.cacheKey,{ expires: cookie_expires });
-                                    // $.cookie('access_token',data.content.token,{ expires: cookie_expires });
-                                    $.cookie('user',JSON.stringify(data.content.user),{ expires: cookie_expires });
-                                    window.location = ''+data.content.url+'';
-                                },3000);
-                            } else {
-                                setTimeout(function () {
-                                    $("#loading").empty();
-                                    $("#loading").css("display","none");
-                                },3000);
-                                alert(data.message);
-                            }
-                        },
-                        error:function (e) {
-                            setTimeout(function () {
-                                $("#loading").empty();
-                                $("#loading").css("display","none");
-                            },3000);
-                            if(e.responseJSON.message)
-                            {
-                                alert(e.responseJSON.message);
-                            }
-                        }
-                    })
-                }
-                return false;
+                return isValid;
             }
-
 		</script>
 		<script src="/js/login/TweenLite.min.js"></script>
 		<script src="/js/login/EasePack.min.js"></script>

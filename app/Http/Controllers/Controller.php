@@ -95,22 +95,22 @@ class Controller extends BaseController
         return $this;
     }
 
-    public function response()
-    {
-        return response()
-            ->json($this->getMessage())
-            ->setEncodingOptions(
-                env('APP_ENV') == 'prod'
-                    ? JSON_FORCE_OBJECT
-                    : JSON_FORCE_OBJECT
-                    | JSON_UNESCAPED_UNICODE
-                    | JSON_UNESCAPED_SLASHES
-                    | JSON_PRETTY_PRINT
-            )
-            ->withHeaders([
-                'Access-Control-Allow-Origin' => '*'
-            ]);
-    }
+//    public function response()
+//    {
+//        return response()
+//            ->json($this->getMessage())
+//            ->setEncodingOptions(
+//                env('APP_ENV') == 'prod'
+//                    ? JSON_FORCE_OBJECT
+//                    : JSON_FORCE_OBJECT
+//                    | JSON_UNESCAPED_UNICODE
+//                    | JSON_UNESCAPED_SLASHES
+//                    | JSON_PRETTY_PRINT
+//            )
+//            ->withHeaders([
+//                'Access-Control-Allow-Origin' => '*'
+//            ]);
+//    }
     public function responseArray()
     {
 

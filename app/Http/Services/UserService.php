@@ -13,6 +13,7 @@ use App\Helpers\ErrorCode;
 use App\Models\UserAuthModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class UserService extends BaseService
 {
@@ -35,46 +36,58 @@ class UserService extends BaseService
      */
     public function autoRegisterUser($data)
     {
-        $username = isset($data['username']) ? $data['username'] : 'user'.time().rand(0,9999);
-        $password = isset($data['password']) ? $data['password'] : 'pwd1234';
-        $nickname = isset($data['nickname']) ? $data['nickname'] : 'nickname'.time().rand(0,9999);
-        $email = isset($data['email']) ? $data['email'] : '';
+        $userAuthArr = ['identity_type', 'identifier', 'credential'];
+        $userArr = ['nickname', 'email', 'head_pic', 'mobile'];
 
-        $user = new UserModel();
-        $user->username = $username;
-        $user->password = md5($password);
-        $user->nickname = $nickname;
-        $user->email = $email;
-        $user->created_at = time();
-        $result = $user->save();
+        foreach ($data as $key => $value) {
+            if (in_array($key,$userAuthArr)) {
+                $userAuth[$key] = $value;
+            }
+            if (in_array($key,$userArr)) {
+                $user[$key] = $value;
+            }
+        }
+        $createTime = time();
 
-        return $result;
+        DB::beginTransaction();
+        $userModel = new UserModel();
+        $userModel->nickname = $user['nickname'];
+        $userModel->email = $user['email'];
+        $userModel->created_at = $createTime;
+        $userResult = $userModel->save();
+
+        if ($userResult) {
+            $userAuthModel = new UserAuthModel();
+            $userAuthModel->identity_type = $userAuth['identity_type'];
+            $userAuthModel->identifier = $userAuth['identifier'];
+            $userAuthModel->credential = $userAuth['credential'];
+            $userAuthModel->created_at = $userAuth['created_at'];
+            $userAuthModel->user_id = $userModel->id;
+            $userAuthResult = $userAuthModel->save();
+        }
+        if ($userResult && $userAuthResult) {
+            DB::commit();
+        } else {
+            DB::rollback();
+        }
+
+        return $userModel->id;
     }
 
     /**
      * 用户登录
      * @param $data
-     * @param int $type
      * @return mixed
      * @throws \Exception
      */
-    public function login($data, $type = 1)
+    public function login($data)
     {
-        switch ($type) {
-            case 1:
-                $user = $this->getByUserName($data['username']);
-                if (empty($user)) {
-                    throw new \Exception('没有该账号，请注册后登陆',ErrorCode::USER_ERROR);
-                }
-                if ($user->credential != md5($data['password'])) {
-                    throw new \Exception('用户账号密码不匹配，请重新输入',ErrorCode::USER_PASSWORD_ERROR);
-                }
-                break;
-            case 2:
-                break;
-            default :
-                throw new \Exception('请正常登录', ErrorCode::SYSTEM_ERROR);
-                break;
+        $user = $this->getByUserName($data['username']);
+        if (empty($user)) {
+            throw new \Exception('没有该账号，请注册后登陆',ErrorCode::USER_ERROR);
+        }
+        if ($user->credential != md5($data['password'])) {
+            throw new \Exception('用户账号密码不匹配，请重新输入',ErrorCode::USER_PASSWORD_ERROR);
         }
         Auth::login($user);
         $returnArr['user']['nickname'] = $user->userInfo->nickname;

@@ -141,7 +141,12 @@
     </div>
     <div class="sidebar col-lg-8" style="margin:10px 0;" id="article_list">
         <h3>最新文章</h3>
-        <ul id="article_ul"></ul>
+        <ul id="article_ul">
+            <li style="width: 100%;height: 200px;background-color: #e7e7e7;margin-top: 12px;opacity:0.5"></li>
+            <li style="width: 100%;height: 200px;background-color: #e7e7e7;margin-top: 12px;opacity:0.5"></li>
+            <li style="width: 100%;height: 200px;background-color: #e7e7e7;margin-top: 12px;opacity:0.5"></li>
+            <li style="width: 100%;height: 200px;background-color: #e7e7e7;margin-top: 12px;opacity:0.5"></li>
+        </ul>
     </div>
     @stop
 @section('js')
