@@ -144,7 +144,7 @@ class UserController extends Controller
      */
     public function personalCenterView(Request $request)
     {
-        return view('APP\personalCenter');
+        return view('APP.personalCenter');
     }
 
     /**
