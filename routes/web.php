@@ -28,6 +28,13 @@ Route::group(['namespace' => 'App'], function () {
     // 前端--用户登出
     Route::post('/logout',['uses' => 'UserController@logout']);
 
+    // 前端--用户个人中心
+    Route::get('/personal/center', 'UserController@personalCenterView');
+    // 前端--用户上传图片
+    Route::post('/user/upload_pic','UserController@uploadPic');
+    // 前端--用户信息更新
+    Route::post('/user/edit','UserController@editUserInfo');
+
     // 前端--首页列表页
     Route::get('/index','ArticleController@index');
     // 前端--文章--列表
@@ -39,6 +46,10 @@ Route::group(['namespace' => 'App'], function () {
     // 前端--文章--详情
     Route::get('/article/detail', 'ArticleController@detail');
 
+    // 前端--关于页
+    Route::get('/about',function (){return view('APP.about');});
+    // 前端--个人CV页
+    Route::get('/curriculum_vitae',function (){return view('APP.myCV');});
     // 前端--小游戏
     Route::get('/game',function (){return view('APP.game');});
 

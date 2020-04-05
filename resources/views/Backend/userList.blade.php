@@ -25,89 +25,93 @@
                                 <span></span>
                             </div>
                             <form class="form-inline col-md-8" style="height: 45px;line-height: 45px;color:#999999;" id="search_form">
-                                <div class="form-group">
+                                <div class="form-group" style="margin-left:10px;">
                                     <lable for="username">账号:</lable>
                                     <input type="text" class="form-control" id="username" name="username" autocomplete="off">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="margin-left:10px;">
                                     <lable for="nickname">昵称:</lable>
                                     <input type="text" class="form-control" id="nickname" name="nickname" autocomplete="off">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="margin-left:10px;">
                                     <lable for="email">邮箱:</lable>
                                     <input type="email" class="form-control" id="email" name="email"autocomplete="off">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="margin-left:10px;">
                                     <button type="button" class="btn btn-primary btn-trans form-control" id="search_btn" style="margin-top: 5px">搜索</button>
+                                </div>
+                                <div class="form-group" style="margin-left:10px;">
+                                    <button type="button" class="btn btn-warning btn-trans form-control" id="clear_btn" style="margin-top: 5px">清空</button>
                                 </div>
                             </form>
                             <!-- Button trigger modal -->
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="margin-top: 5px">添加</button>
+                            {{--<button class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="margin-top: 5px">添加</button>--}}
                         </div>
                     </div>
+                    {{--创建用户--}}
                     <!-- Form Modal -->
-                    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title" id="myModalLabel">添加用户</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="form-horizontal" role="form" id="add_form">
-                                        <div class="form-group">
-                                            <label for="username" class="col-sm-2 control-label">账号</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="username" id="new_username" placeholder="账号">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password" class="col-sm-2 control-label">密码</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" name="password" id="new_password" placeholder="密码">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="nickname" class="col-sm-2 control-label">昵称</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="nickname" id="new_nickname" placeholder="昵称">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email" class="col-sm-2 control-label">Email</label>
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" name="email" id="inputEmail3" placeholder="Email">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="mobile" class="col-sm-2 control-label">手机</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="mobile" id="new_mobile" placeholder="手机号">
-                                            </div>
-                                        </div>
-                                        <div class="form-group hidden">
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="head_pic" id="new_head_pic" placeholder="图片">
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <form action="#" class="form-horizontal" id="photoForm" enctype="multipart/form-data">
-                                        <div class="form-group">
-                                            <label for="upload_pic" class="col-sm-2 control-label">头像</label>
-                                            <div class="col-sm-10">
-                                                <input type="file" class="form-control" name="upload_pic" id="upload_pic" placeholder="图片">
-                                                <div><img src="" alt="" id="upload_img" style="width: 150px;height: 150px;margin-top: 10px"></div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="add_btn">添加</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{--<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--}}
+                        {{--<div class="modal-dialog">--}}
+                            {{--<div class="modal-content">--}}
+                                {{--<div class="modal-header">--}}
+                                    {{--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--}}
+                                    {{--<h4 class="modal-title" id="myModalLabel">添加用户</h4>--}}
+                                {{--</div>--}}
+                                {{--<div class="modal-body">--}}
+                                    {{--<form class="form-horizontal" role="form" id="add_form">--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<label for="username" class="col-sm-2 control-label">账号</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="text" class="form-control" name="username" id="new_username" placeholder="账号">--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<label for="password" class="col-sm-2 control-label">密码</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="password" class="form-control" name="password" id="new_password" placeholder="密码">--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<label for="nickname" class="col-sm-2 control-label">昵称</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="text" class="form-control" name="nickname" id="new_nickname" placeholder="昵称">--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<label for="email" class="col-sm-2 control-label">Email</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="email" class="form-control" name="email" id="inputEmail3" placeholder="Email">--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<label for="mobile" class="col-sm-2 control-label">手机</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="text" class="form-control" name="mobile" id="new_mobile" placeholder="手机号">--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="form-group hidden">--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="text" class="form-control" name="head_pic" id="new_head_pic" placeholder="图片">--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</form>--}}
+                                    {{--<form action="#" class="form-horizontal" id="photoForm" enctype="multipart/form-data">--}}
+                                        {{--<div class="form-group">--}}
+                                            {{--<label for="upload_pic" class="col-sm-2 control-label">头像</label>--}}
+                                            {{--<div class="col-sm-10">--}}
+                                                {{--<input type="file" class="form-control" name="upload_pic" id="upload_pic" placeholder="图片">--}}
+                                                {{--<div><img src="" alt="" id="upload_img" style="width: 150px;height: 150px;margin-top: 10px"></div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</form>--}}
+                                {{--</div>--}}
+                                {{--<div class="modal-footer">--}}
+                                    {{--<button type="button" class="btn btn-primary" id="add_btn">添加</button>--}}
+                                    {{--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                     <!-- End Form Modal -->
                 </div>
             </div>
@@ -260,6 +264,7 @@
                                     "<td class=\"username\">"+$item.username+"</td>" +
                                     "<td class=\"nickname\">"+$item.nickname+"</td>" +
                                     "<td class=\"email\">"+$item.email+"</td>" +
+                                    "<td class=\"mobile\">"+$item.mobile+"</td>" +
                                     "<td class=\"identity_type\">"+$item.identity_type+"</td>" +
                                     "<td class=\"created_at\">"+$item.created_at+"</td>" +
                                     "<td>" +
@@ -297,6 +302,10 @@
             $("#search_btn").on("click",function () {
                 getList(page,page_size);
             });
+            //清空搜索
+            $("#clear_btn").on("click",function () {
+                window.location = "";
+            });
             //分页请求
             $("#user_list").on('click','.pagination_a',function(){
                 var _this = $(this);
@@ -317,10 +326,12 @@
                 var username = td[2].innerText;
                 var nickname = td[3].innerText;
                 var email = td[4].innerText;
+                var mobile = td[5].innerText;
                 $("#edit_id").val(id);
                 $("#edit_username").val(username);
                 $("#edit_nickname").val(nickname);
                 $("#edit_email").val(email);
+                $("#edit_mobile").val(mobile);
             });
 
             $("#update_btn").on("click",function () {
@@ -384,7 +395,6 @@
             //上传图片
             $("#upload_pic").on("change",function () {
                 var upload_pic = new FormData($("#photoForm")[0]);
-                console.log(upload_pic);
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -412,33 +422,33 @@
             });
 
             //添加用户
-            $("#add_btn").on("click",function () {
-                var data = $("#add_form").serialize();
-
-                $.ajax({
-                    url:'/backend/user/add',
-                    type:'post',
-                    data:data,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType:"json",
-                    success:function (data) {
-                        if (data.code == 0) {
-                            alert('添加成功');
-                            console.log(data);
-                            window.location.reload();
-                        } else {
-                            alert(data.message);
-                        }
-                    },
-                    error:function (e) {
-                        console.log(e);
-                        alert('添加失败:'+e.responseJSON.message);
-                    }
-
-                })
-            });
+            // $("#add_btn").on("click",function () {
+            //     var data = $("#add_form").serialize();
+            //
+            //     $.ajax({
+            //         url:'/backend/user/add',
+            //         type:'post',
+            //         data:data,
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         dataType:"json",
+            //         success:function (data) {
+            //             if (data.code == 0) {
+            //                 alert('添加成功');
+            //                 console.log(data);
+            //                 window.location.reload();
+            //             } else {
+            //                 alert(data.message);
+            //             }
+            //         },
+            //         error:function (e) {
+            //             console.log(e);
+            //             alert('添加失败:'+e.responseJSON.message);
+            //         }
+            //
+            //     })
+            // });
         })
 
     </script>

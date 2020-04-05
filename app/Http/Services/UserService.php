@@ -12,6 +12,7 @@ namespace App\Http\Services;
 use App\Helpers\ErrorCode;
 use App\Models\UserAuthModel;
 use App\Models\UserModel;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
@@ -101,7 +102,7 @@ class UserService extends BaseService
     }
 
     /**
-     * 后台登录
+     * 后台管理员登录
      * @param $data
      * @return mixed
      * @throws \Exception

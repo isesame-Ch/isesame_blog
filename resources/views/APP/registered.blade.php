@@ -140,6 +140,13 @@
 								</div>
 							</div>
 							<div class="form-group">
+								<label for="mobile" class="col-sm-1 col-sm-offset-2 control-label" style="text-align: center"><span style="color: #ff0000">*</span>mobile</label>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" id="mobile" name="mobile" title="请输入邮箱" check="required mobile" placeholder="请输入您的手机号">
+									<div class="message">请输入您的手机号</div>
+								</div>
+							</div>
+							<div class="form-group">
 								<div class="col-sm-6 col-sm-offset-3">
 									<button type="buttom" id="reg_submit" class="btn btn-info btn-lg btn-block">注 册</button>
 								</div>
@@ -190,13 +197,14 @@
                         var password = $('#password').val();
                         var nickname = $('#nickname').val();
                         var email = $('#email').val();
+                        var mobile = $('#mobile').val();
                         $.ajax({
                             type: "POST",
                             url: "/registered",
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            data:{'username':username,'password':password,'nickname':nickname,'email':email},
+                            data:{'username':username,'password':password,'nickname':nickname,'email':email, 'mobile':mobile},
                             dataType:"json",
                             success: function(data) {
                                 setTimeout(function () {
@@ -207,6 +215,8 @@
                                         setTimeout(function () {
                                             window.location = ''+data.content.url+'';
                                         },3000);
+									} else {
+                                        alert(data.message);
 									}
                                 },2000);
 							},

@@ -72,31 +72,56 @@
                 <span class="pull-right" id="article_time"><i class="glyphicon glyphicon-time"></i>2018-7-26 0:41:00</span>
             </div>
 
-            <div id="article_content">
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <div style="background-color: #bbb;height: 300px;"></div>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <div style="background-color: #bbb;height: 300px;"></div>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <h1 style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
-                <div style="background-color: #bbb;height: 300px;"></div>
+            <div id="article_content" style="padding: 5px;">
+                <div id="article_content_detail" class="hidden" style="background-color: #fff0" >
+                    <textarea></textarea>
+                </div>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <div class="pre_div" style="background-color: #bbb;height: 300px;"></div>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <div class="pre_div" style="background-color: #bbb;height: 300px;"></div>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <h1 class="pre_div" style="background-color: #bbb;height: 24px;line-height: 24px;"></h1>
+                <div class="pre_div" style="background-color: #bbb;height: 300px;"></div>
 
             </div>
         </div>
     @stop
 
 @section('js')
+    <link rel="stylesheet" href="/editormd/css/editormd.css" />
+    <script src="/editormd/jquery.min.js"></script>
+    <script src="/editormd/lib/marked.min.js"></script>
+    <script src="/editormd/lib/prettify.min.js"></script>
+    <script src="/editormd/lib/raphael.min.js"></script>
+    <script src="/editormd/lib/underscore.min.js"></script>
+    <script src="/editormd/lib/sequence-diagram.min.js"></script>
+    <script src="/editormd/lib/flowchart.min.js"></script>
+    <script src="/editormd/editormd.min.js"></script>
+    <script>
+        function decodeMarkedown (markdown) {
+            content_md = editormd.markdownToHTML("article_content_detail", {
+                markdown:markdown,
+                htmlDecode      : "style,script",  // you can filter tags decode
+                emoji           : true,
+                taskList        : true,
+                tex             : true,  // 默认不解析
+                flowChart       : false,  // 默认不解析
+                sequenceDiagram : false,  // 默认不解析
+            });
+        }
+    </script>
     <script>
         $(function () {
-            var id = "<?php echo $id?>";
+            var id = "{{ $id }}";
 
             function getArticle(id) {
                 $.ajax({
@@ -106,8 +131,11 @@
                     dataType:'json',
                     success:function (data) {
                         if (data.code == 0) {
+                            $('.pre_div').remove();
+                            $("#article_content_detail").removeClass("hidden");
                             $('#article_title').html(data.content.article_name);
-                            $('#article_content').html(data.content.article_content);
+                            decodeMarkedown(data.content.article_content);
+                            // $('#article_content').html(data.content.article_content);
                             $('#article_author').html(data.content.article_author);
                             $('#article_time').text(data.content.created_at);
                             if (data.content.keywords_one) {

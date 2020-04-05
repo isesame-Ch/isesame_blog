@@ -77,6 +77,16 @@ class UserModel extends BaseModel
         return self::query()->where('email', $email)->exists();
     }
 
+    /**
+     * 手机号是否已绑定
+     * @param $mobile
+     * @return bool
+     */
+    public static function isMobileBinded($mobile)
+    {
+        return self::query()->where('mobile', $mobile)->exists();
+    }
+
     public static function getList($where = [], $pageSize = false, $columns = ['*'], $or = false)
     {
         $query = self::query()

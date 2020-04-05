@@ -1,5 +1,6 @@
 
 @extends('layouts.backend')
+<link rel="stylesheet" href="/editormd/css/editormd.min.css" />
 @section('main_content')
     <!--main content start-->
     <section class="main-content-wrapper">
@@ -88,9 +89,16 @@
                                 <select name="category_id" id="category_id" class="form-control"></select>
                             </div>
                         </div>
+                        {{--<div class="form-group col-md-12">--}}
+                            {{--<div class="col-md-12">--}}
+                                {{--<div id="editor" name="article_content" style="height:600px;"></div>--}}
+                            {{--</div>--}}
+                        </div>
                         <div class="form-group col-md-12">
                             <div class="col-md-12">
-                                <div id="editor" name="article_content" style="height:600px;"></div>
+                                <div id="editormd" name="article_content" style="height:600px;">
+                                    <textarea style="/**display:none;"></textarea>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group ">
@@ -109,120 +117,117 @@
 
 <!--Load these page level functions-->
 @section('js')
-    <script type="text/javascript" charset="utf-8" src="/js/editor/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/js/editor/ueditor.all.min.js"> </script>
-    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
-    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
-    <script type="text/javascript" charset="utf-8" src="/js/editor/lang/zh-cn/zh-cn.js"></script>
-    {{--END语言加载--}}
-    {{-- 获取编辑器内容的方法 --}}
+    {{----加载markdown----}}
+    <script src="/editormd/editormd.min.js"></script>
     <script type="text/javascript">
+        let mdEditor;
+        $(function() {
+            mdEditor = editormd("editormd", {
+                width: "100%",
+                height: 740,
+                path : '/editormd/lib/',
+                theme : "dark",
+                previewTheme : "dark",
+                editorTheme : "pastel-on-dark",
+                markdown : "",
+                codeFold : true,
+                //syncScrolling : false,
+                saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+                searchReplace : true,
+                //watch : false,                // 关闭实时预览
+                htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+                //toolbar  : false,             //关闭工具栏
+                //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+                emoji : true,
+                taskList : true,
+                tocm            : true,         // Using [TOCM]
+                tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+                flowChart : true,             // 开启流程图支持，默认关闭
+                sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+                //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+                //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+                //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+                dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+                //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+                imageUpload    : true,
+                imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/editormd/image/upload",
+                onload : function() {
+                    // console.log('onload', this);
+                    // this.fullscreen();
+                    // this.unwatch();
+                    // this.watch().fullscreen();
 
-        //实例化编辑器
-        //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
-        var ue = UE.getEditor('editor',{
-            toolbars: [
-                [
-                    'undo', //撤销
-                    'redo', //重做
-                    'bold', //加粗
-                    'indent', //首行缩进
-                    'italic', //斜体
-                    'underline', //下划线
-                    'strikethrough', //删除线
-                    'subscript', //下标
-                    'fontborder', //字符边框
-                    'superscript', //上标
-                    'formatmatch', //格式刷
-                    'source', //源代码
-                    'pasteplain', //纯文本粘贴模式
-                    'preview', //预览
-                    'horizontal', //分隔线
-                    'removeformat', //清除格式
-                    'time', //时间
-                    'date', //日期
-                    'cleardoc', //清空文档
-                    'insertparagraphbeforetable', //"表格前插入行"
-                    'insertcode', //代码语言
-                    'fontfamily', //字体
-                    'fontsize', //字号
-                    'paragraph', //段落格式
-                    'simpleupload', //单图上传
-                    'insertimage', //多图上传
-                    'link', //超链接
-                    'emotion', //表情
-                    'spechars', //特殊字符
-                    'searchreplace', //查询替换
-                    'map', //Baidu地图
-                    'insertvideo', //视频
-                    'help', //帮助
-                    'justifyleft', //居左对齐
-                    'justifyright', //居右对齐
-                    'justifycenter', //居中对齐
-                    'justifyjustify', //两端对齐
-                    'forecolor', //字体颜色
-                    'backcolor', //背景色
-                    'insertorderedlist', //有序列表
-                    'insertunorderedlist', //无序列表
-                    'fullscreen', //全屏
-                    'directionalityltr', //从左向右输入
-                    'directionalityrtl', //从右向左输入
-                    'rowspacingtop', //段前距
-                    'rowspacingbottom', //段后距
-                    'pagebreak', //分页
-                    'attachment', //附件
-                    'imagecenter', //居中
-                    'wordimage', //图片转存
-                    'lineheight', //行间距
-                    'edittip ', //编辑提示
-                    'customstyle', //自定义标题
-                    'autotypeset', //自动排版
-                    'touppercase', //字母大写
-                    'tolowercase', //字母小写
-                    'background', //背景
-                    'template', //模板
-                    'scrawl', //涂鸦
-                    'music', //音乐
-                    'inserttable', //插入表格
-                    'edittable', //表格属性
-                    'edittd', //单元格属性
-                    'insertrow', //前插入行
-                    'insertcol', //前插入列
-                    'mergeright', //右合并单元格
-                    'mergedown', //下合并单元格
-                    'deleterow', //删除行
-                    'deletecol', //删除列
-                    'splittorows', //拆分成行
-                    'splittocols', //拆分成列
-                    'splittocells', //完全拆分单元格
-                    'deletecaption', //删除表格标题
-                    'inserttitle', //插入标题
-                    'mergecells', //合并多个单元格
-                    'deletetable', //删除表格
-                    'drafts', // 从草稿箱加载
-                    'charts', // 图表
-                ]
-            ],
-            autoHeightEnabled: true,
-            autoFloatEnabled: true,
-            //启用自动保存
-            enableAutoSave: true,
-            //自动保存间隔时间， 单位ms
-            saveInterval: 1000*60*5,
-            maximumWords:100000
+                    // this.setMarkdown($editorContent);
+                    // this.width("100%");
+                    // this.height(480);
+                    this.resize("100%", 640);
+                }
+            });
+
+            $("#goto-line-btn").bind("click", function(){
+                mdEditor.gotoLine(90);
+            });
+
+            $("#show-btn").bind('click', function(){
+                mdEditor.show();
+            });
+
+            $("#hide-btn").bind('click', function(){
+                mdEditor.hide();
+            });
+
+            $("#get-md-btn").bind('click', function(){
+                alert(mdEditor.getMarkdown());
+            });
+
+            $("#get-html-btn").bind('click', function() {
+                alert(mdEditor.getHTML());
+            });
+
+            $("#watch-btn").bind('click', function() {
+                mdEditor.watch();
+            });
+
+            $("#unwatch-btn").bind('click', function() {
+                mdEditor.unwatch();
+            });
+
+            $("#preview-btn").bind('click', function() {
+                mdEditor.previewing();
+            });
+
+            $("#fullscreen-btn").bind('click', function() {
+                mdEditor.fullscreen();
+            });
+
+            $("#show-toolbar-btn").bind('click', function() {
+                mdEditor.showToolbar();
+            });
+
+            $("#close-toolbar-btn").bind('click', function() {
+                mdEditor.hideToolbar();
+            });
+
+            $("#toc-menu-btn").click(function(){
+                mdEditor.config({
+                    tocDropdown   : true,
+                    tocTitle      : "目录 Table of Contents",
+                });
+            });
+
+            $("#toc-default-btn").click(function() {
+                mdEditor.config("tocDropdown", false);
+            });
         });
-        function getContent() {
-            var arr = [];
-            arr.push(UE.getEditor('editor').getContent());
-            return arr;
-        }
     </script>
-    {{-- END!! --}}
+    {{----加载markdown END----}}
 
     <script>
         $(function () {
             //传递过来的文章id
-            var id = "<?php echo $id?>";
+            var id = "{{ $id }}";
+            $editorContent = "";
 
             //获取分类列表
             function getCategoryList(){
@@ -275,7 +280,7 @@
                             $("#upload_img").attr('src','/uploads'+data.content.article_img);
                             $("#article_describe").val(data.content.article_describe);
                             $("#category_id").val(data.content.category_id);
-                            UE.getEditor('editor').setContent(''+data.content.article_content+'', false);
+                            mdEditor.setMarkdown(data.content.article_content);
                         } else {
                             $("#search_alert").removeClass("hidden");
                             $("#search_alert span").html("<strong>出错喽~！</strong>");
@@ -294,96 +299,87 @@
                 })
             }
 
-
             //加载分类列表
             getCategoryList();
+            getArticleDetail(id);
 
-            //等编辑器加载好后再操作，否则有时候会报错
-            ue.ready(function(){
+            //保存修改
+            $("#save_btn").on("click",function () {
+                var article_id = id;
+                let article_name = $("#article_name").val();
+                let article_author = $("#article_author").val();
+                let keywords1 = $("#keywords1").val();
+                let keywords2 = $("#keywords2").val();
+                let keywords3 = $("#keywords3").val();
+                let article_img = $("#article_img").val();
+                let article_describe = $("#article_describe").val();
+                let category_id = $("#category_id").val();
+                let content = mdEditor.getMarkdown();       // 获取 Markdown 源码
 
-                //加载文章内容
-                getArticleDetail(id);
-
-                //保存修改
-                $("#save_btn").on("click",function () {
-                    var article_id = id;
-                    var article_name = $("#article_name").val();
-                    var article_author = $("#article_author").val();
-                    var keywords1 = $("#keywords1").val();
-                    var keywords2 = $("#keywords2").val();
-                    var keywords3 = $("#keywords3").val();
-                    var keywords = {'keywords1':keywords1,'keywords2':keywords2,'keywords3':keywords3};
-                    keywords = JSON.stringify(keywords);
-                    var article_img = $("#article_img").val();
-                    var article_describe = $("#article_describe").val();
-                    var category_id = $("#category_id").val();
-                    var content = getContent()[0];
-
-                    $.ajax({
-                        type:'POST',
-                        url:'/backend/article/edit',
-                        data:{
-                            'article_id' : article_id,
-                            'article_name' : article_name,
-                            'article_author' : article_author,
-                            'keywords' : keywords,
-                            'article_img' : article_img,
-                            'article_describe' : article_describe,
-                            'category_id' : category_id,
-                            'article_content' : content,
-                        },
-                        dataType:'json',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success:function (data) {
-                            if (data.code == 0) {
-                                alert('文章修改成功');
-                            } else {
-                                alert('出错喽~！'+data.message);
-                            }
-                        },
-                        error:function (e) {
-                            $("#search_alert").removeClass("hidden");
-                            $("#search_alert span").html("<strong>出错喽~！</strong>");
-                            if (typeof e.responseJSON.errors !== 'undefined')
-                            {
-                                for($item in e.responseJSON.errors) {
-                                    $("#search_alert span").html($item + "格式不符合要求");
-                                }
-                            }
-                        }
-                    });
-
-                })
-            });
-
-            //上传图片
-            $("#upload_pic").on("change",function () {
-                var upload_pic = new FormData($("#photoForm")[0]);
                 $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    type:'POST',
+                    url:'/backend/article/edit',
+                    data:{
+                        'article_id' : article_id,
+                        'article_name' : article_name,
+                        'article_author' : article_author,
+                        'article_describe' : article_describe,
+                        'keywords_one' : keywords1,
+                        'keywords_two' : keywords2,
+                        'keywords_three' : keywords3,
+                        'article_content' : content,
+                        'article_img' : article_img,
+                        'category_id' : category_id,
                     },
-                    type: 'POST',
-                    url:'/backend/article/upload_pic',
-                    data: upload_pic,
-                    processData:false,
-                    contentType: false,
-                    cache: false,
+                    dataType:'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success:function (data) {
-                        if (data.code == 0)
-                        {
-                            $("#article_img").val(data.content);
-                            $("#upload_img").attr('src','/uploads'+data.content);
+                        if (data.code == 0) {
+                            alert('文章修改成功');
+                        } else {
+                            alert('出错喽~！'+data.message);
                         }
                     },
                     error:function (e) {
-                        alert('图片上传失败');
+                        $("#search_alert").removeClass("hidden");
+                        $("#search_alert span").html("<strong>出错喽~！</strong>");
+                        if (typeof e.responseJSON.errors !== 'undefined')
+                        {
+                            for($item in e.responseJSON.errors) {
+                                $("#search_alert span").html($item + "格式不符合要求");
+                            }
+                        }
                     }
                 });
-            });
+            })
         })
+
+        //上传图片
+        $("#upload_pic").on("change",function () {
+            var upload_pic = new FormData($("#photoForm")[0]);
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                type: 'POST',
+                url:'/backend/article/upload_pic',
+                data: upload_pic,
+                processData:false,
+                contentType: false,
+                cache: false,
+                success:function (data) {
+                    if (data.code == 0) {
+                        $("#article_img").val(data.content);
+                        $("#upload_img").attr('src','/uploads'+data.content).css('display','block');
+                    }
+                },
+                error:function (e) {
+                    alert('图片上传失败');
+                }
+            });
+        });
     </script>
 
 @stop

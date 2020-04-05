@@ -58,8 +58,8 @@ class UserController extends Controller
         foreach ($users['data'] as &$item) {
             $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
             $item['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
-            $item['username'] = $item['user_auth'][0]['identifier'];
-            switch ($item['user_auth'][0]['identity_type']) {
+            $item['username'] = $item['identifier'];
+            switch ($item['identity_type']) {
                 case 1:
                     $item['identity_type'] = '自建账户';
                     break;
@@ -149,7 +149,8 @@ class UserController extends Controller
             'user_id' => 'required|integer',
             'username' => 'required|string',
             'nickname' => 'required|string',
-            'email' => 'required|email'
+            'email' => 'email',
+            'mobile' => 'string|max:15',
         ];
         $data = $this->filterParams($request, $rules);
 

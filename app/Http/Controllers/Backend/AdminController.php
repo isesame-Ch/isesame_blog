@@ -96,7 +96,8 @@ class AdminController extends Controller
         $adminList = $this->obj2Array(
             AdminModel::getList(
                 $where,
-                $request->input('page_size',10)
+                $request->input('page_size',10),
+                ['admin.*','user_auth.identifier']
             )
         );
 
@@ -104,8 +105,6 @@ class AdminController extends Controller
             $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
             $item['updated_at'] = date('Y-m-d H:i:s', $item['updated_at']);
 
-            $item['username'] = $item['identifier'];
-            unset($item['credential']);
             $item['nickname'] = $item['user_info']['nickname'];
             $item['email'] = $item['user_info']['email'];
             unset($item['user_info']);
@@ -123,6 +122,77 @@ class AdminController extends Controller
             }
         }
         $this->setKeyContent($this->listData($adminList));
+        return $this->responseArray();
+    }
+
+    public function edit(Request $request)
+    {
+        $rules = [
+            'admin_id' => 'required|integer',
+            'identity' => 'required|in:1,2'
+        ];
+
+        if (Auth::guard('admin')->user()->identity != 2) {
+            throw new \Exception('非超管不能操作', ErrorCode::ADMIN_ERROR);
+        }
+        $data = $this->filterParams($request, $rules);
+        $admin = AdminModel::query()->find(Arr::pull($data, 'admin_id'));
+        if (!$admin) {
+            throw new \Exception('没有该管理员', ErrorCode::ADMIN_ERROR);
+        }
+        $result = $admin->update($data);
+
+        $this->setKeyContent($result);
+        return $this->responseArray();
+    }
+
+    public function delete(Request $request)
+    {
+        $rules = [
+            'admin_id' => 'required|integer',
+        ];
+
+        if (Auth::guard('admin')->user()->identity != 2) {
+            throw new \Exception('非超管不能操作', ErrorCode::ADMIN_ERROR);
+        }
+        $data = $this->filterParams($request, $rules);
+        $admin = AdminModel::query()->find(Arr::pull($data, 'admin_id'));
+        if (!$admin) {
+            throw new \Exception('没有该管理员', ErrorCode::ADMIN_ERROR);
+        }
+        $result = $admin->delete();
+
+        $this->setKeyContent($result);
+        return $this->responseArray();
+    }
+
+    public function add(Request $request)
+    {
+        $rules = [
+            'identifier' => 'required|string',
+            'identity' => 'required|in:1,2'
+        ];
+
+        if (Auth::guard('admin')->user()->identity != 2) {
+            throw new \Exception('非超管不能操作', ErrorCode::ADMIN_ERROR);
+        }
+        $data = $this->filterParams($request, $rules);
+        $user = $this->userService->getByUserName($data['identifier'], 1);
+        if (!$user) {
+            throw new \Exception('没有该自建账号', ErrorCode::USER_ERROR_EXISTS);
+        }
+
+        $admin = AdminModel::query()->where(['user_id' => $user->user_id])->first();
+        if ($admin) {
+            throw new \Exception('该管理员已存在', ErrorCode::ADMIN_ERROR);
+        }
+        $admin = new AdminModel();
+        $admin->user_id = $user->user_id;
+        $admin->identity = $data['identity'];
+        $admin->created_at = time();
+        $result = $admin->save();
+
+        $this->setKeyContent($result);
         return $this->responseArray();
     }
 }

@@ -265,18 +265,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="about.html" style="color: #fefefe;">
-                                    关于
-                                </a>
-                            </li>
-                            <li>
                                 <a href="blog.html" style="color: #fefefe;">
                                     博客
                                 </a>
                             </li>
                             <li>
-                                <a href="works.html" style="color: #fefefe;">
-                                    作品
+                                <a href="/curriculum_vitae" style="color: #fefefe;">
+                                    简历
                                 </a>
                             </li>
                             <li>
@@ -285,13 +280,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="contact.html" style="color: #fefefe;">
-                                    联系
-                                </a>
-                            </li>
-                            <li>
-                                <a href="help.html" style="color: #fefefe;">
-                                    帮助
+                                <a href="/about" style="color: #fefefe;">
+                                    关于
                                 </a>
                             </li>
                         </ul>
@@ -302,7 +292,7 @@
                                 @if (Auth::check())
                                     <ul class="dropdown-menu">
                                         <li id="drop-li">
-                                            <a href="#" class="drop-btn"> {{ Auth::user()->userInfo->nickname }}</a>
+                                            <a href="/personal/center" class="drop-btn"> {{ Auth::user()->userInfo->nickname }}</a>
                                         </li>
                                         <li class="drop-li">
                                             <a href="#" id="sign_out_btn" class="drop-btn">退出登陆</a>
@@ -508,28 +498,28 @@
         @section('user_sidebar')
             <div class="sidebar col-lg-4" id="user_info">
                 <div id="user_info_head">
-                    <img src="/img/introduction_head_pic.jpg" class="user_head_img" alt="" style="width: 100px;height: 100px;">
+                    <img src="/img/introduction_head_pic.png" class="user_head_img" alt="" style="width: 100px;height: 100px;">
                 </div>
                 <div class="col-lg-12" id="user_detail">
                     <ul class="col-lg-12" id="user_info_ul">
                         <li class="col-lg-4">
-                            <span>110</span>
+                            <span>20</span>
                             会员数
                         </li>
                         <li class="col-lg-4">
-                            <span>110</span>
+                            <span>5</span>
                             文章数
                         </li>
                         <li class="col-lg-4">
-                            <span>110</span>
+                            <span>3</span>
                             标签总数
                         </li>
                     </ul>
                 </div>
                 <div class="col-lg-12" id="introduction">
-                    <span id="introduction_title">个人简介</span>
+                    <span id="introduction_title">我的简介</span>
                     <p id="introduction_content">
-                        博主网名—XISHAN,现从事互联网工作，目前就职于 ~~~ 不想说 。本人的工作方向是PHP后台开发方面，不过也一直在学习前端开发和Linux服务器，比较喜欢的就是研究新技术，得跟上时代的脚步，不停的学习
+                        Hello!!  我叫ISESAME,现从事互联网工作，目前就职于 ~~~（我就不说XD）。我的工作方向是PHP后台开发方面，不过也一直在学习前端开发和Linux服务器，比较喜欢的就是研究新技术，得跟上时代的脚步，不停的学习
                     </p>
                 </div>
             </div>

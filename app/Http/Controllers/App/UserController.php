@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         $this->userService = $userService;
         $this->middleware('user.auth', [
-            'only' => ['logOut']
+            'only' => ['logOut', 'personalCenterView']
         ]);
     }
 
@@ -135,5 +135,84 @@ class UserController extends Controller
         $return = ['url'=>'/login'];
         $this->setKeyContent($return);
         return $this->responseArray();
+    }
+
+    /**
+     * 个人中心页
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function personalCenterView(Request $request)
+    {
+        return view('APP\personalCenter');
+    }
+
+    /**
+     * 上传头像
+     * @param Request $request
+     * @return bool|string
+     * @throws \Exception
+     */
+    public function uploadPic(Request $request)
+    {
+        $rules = [
+            'upload_pic' => 'required'
+        ];
+        $this->validate($request, $rules);
+        $file = $request->file('upload_pic');
+        $extension = $file->getClientOriginalExtension();
+
+        if (!in_array($extension,['jpg','png','gif','jpeg'])) {
+            throw new \Exception('只能上传以jpg,png,gif,jpeg作后缀的图片哦~',ErrorCode::FILE_EXTENSION_ERROR);
+        }
+        $currentDate = Date('Ym',time());
+        $file_path = '/uploads/user_head/'.$currentDate;
+        $filename = md5('upload'.rand(1000,9999).microtime()). '.' .$extension;
+        $file->move(public_path($file_path),$filename);
+
+        $this->setKeyContent('/user_head/'.$currentDate.'/'.$filename);
+        return $this->responseArray();
+    }
+
+    /**
+     * 更新用户信息
+     * @param Request $request
+     * @return UserController
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function editUserInfo(Request $request)
+    {
+        $rules =  [
+            'nickname' => 'bail|required|max:50',
+            'email' => 'bail|required|email',
+            'mobile' => 'bail|required|integer',
+            'head_pic' => 'required|string'
+        ];
+        if (!Auth::check()) {
+            throw new \Exception('请先登录', ErrorCode::SYSTEM_ERROR);
+        }
+        $data = $this->filterParams($request, $rules);
+        $data['user_id'] = Auth::user()->user_id;
+        $user = UserModel::query()->find($data['user_id']);
+        if (!$user) {
+            throw new \Exception('该用户名不存在', ErrorCode::USER_ERROR_EXISTS);
+        }
+        if ($data['nickname'] != $user->nickname && UserModel::isNickNameExists($data['nickname'])) {
+            throw new \Exception('该昵称已存在', ErrorCode::USER_ERROR_EXISTS);
+        };
+        if ($data['email'] != $user->email && UserModel::isEmailBinded($data['email'])) {
+            throw new \Exception('该邮箱已绑定', ErrorCode::USER_EMAIL_BINDED);
+        };
+        if ($data['mobile'] != $user->mobile && UserModel::isMobileBinded($data['mobile'])) {
+            throw new \Exception('该邮箱已绑定', ErrorCode::USER_EMAIL_BINDED);
+        };
+
+        $user->nickname = $data['nickname'];
+        $user->email = $data['email'];
+        $user->mobile = $data['mobile'];
+        $user->head_pic = $data['head_pic'];
+        $user->updated_at = time();
+        $userResult = $user->save();
+        return $this->setKeyContent($userResult)->responseArray();
     }
 }

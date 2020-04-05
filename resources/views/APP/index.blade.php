@@ -114,17 +114,17 @@
             <div class="carousel-inner">
                 <div class="item active">
                     <a href="#">
-                        <img src="/img/carousel1.jpg" class="carousel-img" style="width: 1200px;height: 400px;" alt="First slide">
+                        <img src="/img/carousel-1.jpg" class="carousel-img" style="width: 1200px;height: 400px;" alt="First slide">
                     </a>
                 </div>
                 <div class="item">
                     <a href="#">
-                        <img src="/img/carousel2.jpg" class="carousel-img" style="width: 1200px;height: 400px;" alt="Second slide">
+                        <img src="/img/carousel-2.jpg" class="carousel-img" style="width: 1200px;height: 400px;" alt="Second slide">
                     </a>
                 </div>
                 <div class="item">
                     <a href="#">
-                        <img src="/img/carousel3.jpg" class="carousel-img" style="width: 1200px;height: 400px;" alt="Third slide">
+                        <img src="/img/carousel-3.jpg" class="carousel-img" style="width: 1200px;height: 400px;" alt="Third slide">
                     </a>
                 </div>
             </div>

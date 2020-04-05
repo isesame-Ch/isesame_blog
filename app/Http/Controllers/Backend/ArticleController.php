@@ -125,12 +125,16 @@ class ArticleController extends Controller
     public function edit(Request $request)
     {
         $rules = [
+            'category_id' => 'required|integer',
             'article_id' => 'required|integer',
             'article_name' => 'required|string',
-            'article_author' => 'required|string',
-            'category_id' => 'required|integer',
-            'article_type' => 'required|in:1,2',
-            'article_support' => 'required|in:1,2'
+            'article_author' => 'required|string|max:20',
+            'article_describe' => 'required|string',
+            'keywords_one' => 'required|string',
+            'keywords_two' => 'string',
+            'keywords_three' => 'string',
+            'article_content' => 'required|string',
+            'article_img' => 'string|nullable',
         ];
         $data = $this->filterParams($request, $rules);
 
@@ -242,7 +246,7 @@ class ArticleController extends Controller
         $currentDate = Date('Ym',time());
         $file_path = 'uploads/article_img/'.$currentDate;
         $fullPath = public_path($file_path);
-        if (is_dir($fullPath)) {
+        if (!is_dir($fullPath)) {
             mkdir($fullPath);
         }
         $filename = md5('upload'.rand(1000,9999).microtime()). '.' .$extension;

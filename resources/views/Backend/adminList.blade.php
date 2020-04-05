@@ -37,12 +37,16 @@
                                     <lable for="email">邮箱:</lable>
                                     <input type="email" class="form-control" id="email" name="email"autocomplete="off">
                                 </div>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-trans form-control" id="search_btn">搜索</button>
+                                <div class="form-group" style="margin-left:10px; ">
+                                    <button type="button" class="btn btn-primary btn-trans form-control" id="search_btn" style="margin-top: 5px">搜索</button>
                                 </div>
                             </form>
                             <!-- Button trigger modal -->
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="margin-top: 5px">添加</button>
+                            @if(Auth::guard('admin')->user()->identity == 2)
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#formModal" style="margin-top: 5px">添加</button>
+                            @else
+
+                            @endif
                         </div>
                     </div>
                     <!-- Form Modal -->
@@ -56,18 +60,17 @@
                                 <div class="modal-body">
                                     <form class="form-horizontal" role="form" id="add_admin_form">
                                         <div class="form-group">
-                                            <label for="username" class="col-sm-2 control-label">账号</label>
+                                            <label for="identifier" class="col-sm-2 control-label">账号</label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" name="username" id="new_username" placeholder="账号" autocomplete="off">
+                                                <input type="text" class="form-control" name="identifier" id="new_username" placeholder="账号" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="identity" class="col-sm-2 control-label">权限等级</label>
                                             <div class="col-sm-10">
                                                 <select name="identity" id="new_identity"  class="form-control">
-                                                    <option value="1">普通用户</option>
-                                                    <option value="2">管理员</option>
-                                                    <option value="3">超级管理员</option>
+                                                    <option value="1">管理员</option>
+                                                    <option value="2">超级管理员</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -111,9 +114,8 @@
                                             <label for="identity" class="col-sm-2 control-label">权限等级</label>
                                             <div class="col-sm-10">
                                                 <select name="identity" id="edit_identity"  class="form-control">
-                                                    <option value="1">普通用户</option>
-                                                    <option value="2">管理员</option>
-                                                    <option value="3">超级管理员</option>
+                                                    <option value="1">管理员</option>
+                                                    <option value="2">超级管理员</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -132,34 +134,24 @@
                             <span class="panel-title">权限列表</span>
                         </div>
                         <div class="panel-body">
-                            <table class="table table-hover" id="admin_list">
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th style="display:none">id</th>
-                                    <th>账号</th>
-                                    <th>角色权限</th>
-                                    <th>昵称</th>
-                                    <th>邮箱</th>
-                                    <th>创建时间</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {{--<tr>--}}
-                                {{--<td>1</td>--}}
-                                {{--<td>12</td>--}}
-                                {{--<td>Mark</td>--}}
-                                {{--<td>Otto</td>--}}
-                                {{--<td>Otto</td>--}}
-                                {{--<td>Otto</td>--}}
-                                {{--<td>--}}
-                                {{--<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModal">编辑</button>--}}
-                                {{--<button class="btn btn-danger btn-sm">删除</button>--}}
-                                {{--</td>--}}
-                                {{--</tr>--}}
-                                </tbody>
-                            </table>
+{{--                            @if(Auth::guard('admin')->user()->identity == 2)--}}
+                                <table class="table table-hover" id="admin_list">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="display:none">id</th>
+                                        <th>账号</th>
+                                        <th>角色权限</th>
+                                        <th>昵称</th>
+                                        <th>邮箱</th>
+                                        <th>创建时间</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            {{--@else--}}
+                            {{--@endif--}}
                         </div>
                     </div>
                 </div>
@@ -216,21 +208,37 @@
                             $i=1;
                             $list.forEach(function ($item) {
                                 $item.created_at = $item.created_at;
-                                $("#admin_list tbody").append(
-                                    "<tr>" +
-                                    "<td class=\"num\">"+$i+"</td>" +
-                                    "<td class=\"admin_id\" style=\"display:none\">"+$item.id+"</td>" +
-                                    "<td class=\"username\">"+$item.username+"</td>" +
-                                    "<td class=\"username\">"+$item.identity+"</td>" +
-                                    "<td class=\"nickname\">"+$item.nickname+"</td>" +
-                                    "<td class=\"email\">"+$item.email+"</td>" +
-                                    "<td class=\"created_time\">"+$item.created_at+"</td>" +
-                                    "<td>" +
-                                    "<button class=\"btn btn-primary btn-sm edit_btn\" data-toggle=\"modal\" data-target=\"#updateModal\" style=\"margin-left: 5px\">编辑</button>" +
-                                    "<button class=\"btn btn-danger btn-sm delete_btn\" style=\"margin-left: 5px\">删除</button>" +
-                                    "</td>" +
-                                    "</tr>"
-                                );
+                                @if(Auth::guard('admin')->user()->identity == 2)
+                                    $("#admin_list tbody").append(
+                                        "<tr>" +
+                                        "<td class=\"num\">"+$i+"</td>" +
+                                        "<td class=\"admin_id\" style=\"display:none\">"+$item.id+"</td>" +
+                                        "<td class=\"username\">"+$item.identifier+"</td>" +
+                                        "<td class=\"username\">"+$item.identity+"</td>" +
+                                        "<td class=\"nickname\">"+$item.nickname+"</td>" +
+                                        "<td class=\"email\">"+$item.email+"</td>" +
+                                        "<td class=\"created_time\">"+$item.created_at+"</td>" +
+                                        "<td>" +
+                                        "<button class=\"btn btn-primary btn-sm edit_btn\" data-toggle=\"modal\" data-target=\"#updateModal\" style=\"margin-left: 5px\">编辑</button>" +
+                                        "<button class=\"btn btn-danger btn-sm delete_btn\" style=\"margin-left: 5px\">删除</button>" +
+                                        "</td>" +
+                                        "</tr>"
+                                    );
+                                @else
+                                    $("#admin_list tbody").append(
+                                        "<tr>" +
+                                        "<td class=\"num\">"+$i+"</td>" +
+                                        "<td class=\"admin_id\" style=\"display:none\">"+$item.id+"</td>" +
+                                        "<td class=\"username\">"+$item.identifier+"</td>" +
+                                        "<td class=\"username\">"+$item.identity+"</td>" +
+                                        "<td class=\"nickname\">"+$item.nickname+"</td>" +
+                                        "<td class=\"email\">"+$item.email+"</td>" +
+                                        "<td class=\"created_time\">"+$item.created_at+"</td>" +
+                                        "<td>" +
+                                        "</td>" +
+                                        "</tr>"
+                                    );
+                                @endif
                                 $i++;
                             })
                         }
@@ -281,14 +289,11 @@
                 var identity = td[3].innerText;
                 switch (identity)
                 {
-                    case '普通用户':
+                    case '管理员':
                         $("#edit_identity").val(1);
                         break;
-                    case '管理员':
-                        $("#edit_identity").val(2);
-                        break;
                     case '超级管理员':
-                        $("#edit_identity").val(3);
+                        $("#edit_identity").val(2);
                         break;
                     default:
                         $("#edit_identity").val(1);
@@ -308,13 +313,17 @@
                     },
                     dataType:"json",
                     success:function (data) {
-                        if (data.code == 0)
-                        {
+                        if (data.code == 0) {
                             alert('编辑成功');
                             window.location.reload();
+                        } else {
+                            alert('编辑失败:' + data.message);
                         }
                     },
                     error:function (e) {
+                        for($item in e.responseJSON.errors) {
+                            console.log('编辑失败:' + $item);
+                        }
                         alert('编辑失败');
                         // window.location.reload();
                     }
@@ -362,8 +371,13 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (data) {
-                        alert('添加成功');
-                        window.location.reload();
+                        if (data.code == 0) {
+
+                            alert('添加成功');
+                            // window.location.reload();
+                        } else {
+                            alert('添加失败：'+data.message);
+                        }
                     },
                     error: function (e) {
                         $("#search_alert").removeClass("hidden");

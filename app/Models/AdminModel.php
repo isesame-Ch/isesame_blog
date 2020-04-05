@@ -2,11 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AdminModel extends Authenticatable
 {
+    use SoftDeletes;
     protected $table = 'admin';
+
+    /**
+     * 表明模型是否应该被打上时间戳
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * 不可以被批量赋值的属性。
@@ -18,7 +27,7 @@ class AdminModel extends Authenticatable
      * 可以被批量赋值的属性。
      * @var array
      */
-    #protected $fillable = [''];
+    protected $fillable = ['identity'];
 
     /**
      * 管理员账户信息
