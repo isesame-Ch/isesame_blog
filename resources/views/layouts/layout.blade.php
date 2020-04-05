@@ -265,7 +265,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="blog.html" style="color: #fefefe;">
+                                <a href="/about" style="color: #fefefe;">
                                     博客
                                 </a>
                             </li>
