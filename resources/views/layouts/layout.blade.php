@@ -280,6 +280,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="/music" style="color: #fefefe;">
+                                    music
+                                </a>
+                            </li>
+                            <li>
                                 <a href="/about" style="color: #fefefe;">
                                     关于
                                 </a>
@@ -593,7 +598,7 @@
             }
         })
     });
-    
+
     // 获取推荐文章列表,加载推荐文章列表
     $(function () {
         $.ajax({

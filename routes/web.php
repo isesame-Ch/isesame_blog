@@ -52,6 +52,8 @@ Route::group(['namespace' => 'App'], function () {
     Route::get('/curriculum_vitae',function (){return view('APP.myCV');});
     // 前端--小游戏
     Route::get('/game',function (){return view('APP.game');});
+    // 前端--点歌台
+    Route::get('/music',function (){return view('APP.music');});
 
 
     ### 第三方登录 begin ###
@@ -59,7 +61,6 @@ Route::group(['namespace' => 'App'], function () {
 
     Route::get('/oauth/qq/callback','OauthController@QQCallback');
 });
-
 
 
 ############    后台管理路由    #############
